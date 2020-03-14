@@ -21,7 +21,6 @@ router.get("/profile", auth, (req, res, next) => {
 router.route("/google/token").post(async (req, res, next) => {
   try {
     const code = req.body.code;
-    console.log(req.body);
     const idToken = await googleAuth.getIdToken(code);
     const profile = await googleAuth.getProfileInfo(idToken);
     let users = await db.User.findAll({

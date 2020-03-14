@@ -10,7 +10,6 @@ const client = new OAuth2Client(
    */
   "postmessage"
 );
-console.log(process.env);
 
 exports.getIdToken = async code => {
   const r = await client.getToken(code);

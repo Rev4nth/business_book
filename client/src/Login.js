@@ -11,23 +11,25 @@ class Login extends Component {
         code: response["code"]
       })
       .then(response => {
+        console.log("hee");
         const userToken = response.data.token;
         localStorage.setItem("userToken", JSON.stringify(userToken));
         axios.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
         this.props.history.push("/");
+        console.log(response);
       });
   };
-  componentDidMount() {
-    let userToken = localStorage.getItem("userToken");
-    if (userToken) {
-      this.props.history.push("/");
-    }
-  }
+  // componentDidMount() {
+  //   let userToken = localStorage.getItem("userToken");
+  //   if (userToken) {
+  //     this.props.history.push("/");
+  //   }
+  // }
   render() {
     return (
       <Container textAlign="center" style={{ marginTop: 240 }}>
         <GoogleLogin
-          clientId="573587934610-p2vasi0o1ju8uhlrosrkhdenaevtd66c.apps.googleusercontent.com"
+          clientId="425566656483-mvtk9oc6s1rc7lm8mv53vg7nddgi138s.apps.googleusercontent.com"
           buttonText="Login"
           responseType="code"
           onSuccess={this.responseGoogle}

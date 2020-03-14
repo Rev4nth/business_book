@@ -8,15 +8,22 @@ class Home extends Component {
     firstName: "",
     name: ""
   };
-  componentDidMount() {
-    axios.get("api/profile").then(response => {
-      const user = response.data.user;
-      this.setState({
-        firstName: user.firstName,
-        name: user.name
-      });
-    });
-  }
+  // componentDidMount() {
+  //   axios
+  //     .get("api/profile")
+  //     .then(response => {
+  //       const user = response.data.user;
+  //       this.setState({
+  //         firstName: user.firstName,
+  //         name: user.name
+  //       });
+  //     })
+  //     .catch(error => {
+  //       console.log("jeee");
+
+  //       console.error(error);
+  //     });
+  // }
   logout = () => {
     localStorage.removeItem("userToken");
     this.props.history.push("/login");
