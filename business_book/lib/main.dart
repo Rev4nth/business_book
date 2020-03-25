@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:business_book/views/sale_list_view.dart';
+
+import './screens/tabs_screen.dart';
+import './screens/edit_sale_screen.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Sales';
-
     return MaterialApp(
-      title: appTitle,
-      home: SaleListView(),
+      title: "Business Book",
+      routes: {
+        '/': (context) => TabsScreen(),
+        '/edit-sale': (context) => EditSale()
+      },
     );
   }
 }
