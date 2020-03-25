@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './customers_list_screen.dart';
 import './edit_sale_screen.dart';
 import './sales_list_screen.dart';
+import './edit_customer_screen.dart';
 
 class TabsScreen extends StatefulWidget {
   @override
@@ -36,6 +37,10 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // final routeArgs = ModalRoute.of(context).settings.arguments as int;
+    // if (routeArgs != null) {
+    //   _selectedPageIndex = routeArgs;
+    // }
     return Scaffold(
         appBar: AppBar(
           title: Text(_pages[_selectedPageIndex]['title']),
@@ -43,7 +48,12 @@ class _TabsScreenState extends State<TabsScreen> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
-                Navigator.of(context).pushNamed(EditSale.routeName);
+                if (_pages[_selectedPageIndex]['title'] == 'Sales') {
+                  Navigator.of(context).pushNamed(EditSale.routeName);
+                }
+                if (_pages[_selectedPageIndex]['title'] == 'Customers') {
+                  Navigator.of(context).pushNamed(EditCustomer.routeName);
+                }
               },
             )
           ],
@@ -51,9 +61,6 @@ class _TabsScreenState extends State<TabsScreen> {
         body: _pages[_selectedPageIndex]['page'],
         bottomNavigationBar: BottomNavigationBar(
           onTap: _selectPage,
-          // backgroundColor: Theme.of(context).primaryColor,
-          // unselectedItemColor: Colors.white,
-          // selectedItemColor: Theme.of(context).accentColor,
           currentIndex: _selectedPageIndex,
           type: BottomNavigationBarType.fixed,
           items: [

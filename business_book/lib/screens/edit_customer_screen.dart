@@ -1,37 +1,37 @@
 import 'dart:convert';
 
-import 'package:business_book/screens/sales_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/sale.dart';
+import './customers_list_screen.dart';
+import '../models/customer.dart';
 
-class EditSale extends StatefulWidget {
-  static const routeName = '/edit-sale';
+class EditCustomer extends StatefulWidget {
+  static const routeName = '/edit-customer';
   @override
-  _EditSaleState createState() => _EditSaleState();
+  _EditCustomerState createState() => _EditCustomerState();
 }
 
-class _EditSaleState extends State<EditSale> {
+class _EditCustomerState extends State<EditCustomer> {
   final _form = GlobalKey<FormState>();
   final _baseUrl = 'http://192.168.1.2:3000';
-  Sale _sale = Sale();
+  Customer _customer = Customer();
 
-  void _saveSale() {
+  void _saveCustomer() {
     var isValid = _form.currentState.validate();
     if (!isValid) {
       return;
     }
     _form.currentState.save();
-    final url = '$_baseUrl/api/sales/';
+    final url = '$_baseUrl/api/customers/';
     http.post(
       url,
       headers: {"Content-Type": "application/json"},
-      body: json.encode(_sale),
+      body: json.encode(_customer),
     );
     Navigator.of(context).popAndPushNamed(
-      SalesListScreen.routeName,
-      arguments: 0,
+      '/',
+      arguments: 1,
     );
   }
 
@@ -39,7 +39,7 @@ class _EditSaleState extends State<EditSale> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Sale"),
+        title: Text("Add Customer"),
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
@@ -48,39 +48,36 @@ class _EditSaleState extends State<EditSale> {
           child: ListView(
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(labelText: 'Description'),
+                decoration: InputDecoration(labelText: 'Name'),
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Please enter sale description.';
+                    return 'Please enter a name.';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  _sale.description = value;
+                  _customer.name = value;
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Amount'),
+                decoration: InputDecoration(labelText: 'Contact'),
                 textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.phone,
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Please enter an amount.';
+                    return 'Please enter a number.';
                   }
-                  if (double.tryParse(value) == null) {
+                  if (value.length != 10) {
                     return 'Please enter a valid number.';
-                  }
-                  if (double.parse(value) <= 0) {
-                    return 'Please enter a number greater than zero.';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  _sale.amount = int.parse(value);
+                  _customer.contact = value;
                 },
               ),
               RaisedButton(
-                onPressed: _saveSale,
+                onPressed: _saveCustomer,
                 child: new Text('Save'),
               )
             ],

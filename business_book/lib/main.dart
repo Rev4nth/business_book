@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import './screens/tabs_screen.dart';
 import './screens/edit_sale_screen.dart';
+import './screens/edit_customer_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +13,8 @@ class MyApp extends StatelessWidget {
       title: "Business Book",
       routes: {
         '/': (context) => TabsScreen(),
-        '/edit-sale': (context) => EditSale()
+        '/edit-sale': (context) => EditSale(),
+        '/edit-customer': (context) => EditCustomer(),
       },
     );
   }
