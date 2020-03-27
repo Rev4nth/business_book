@@ -19,9 +19,9 @@ router
       console.log(req.body);
       const sale = await db.Sale.create({
         description: req.body.description,
-        amount: parseInt(req.body.amount)
+        amount: parseInt(req.body.amount),
         //   accountId: parseInt(req.params.accountId)
-        // saleDate: req.body.saleDate
+        saleDate: req.body.date
       });
       res.json(sale);
     } catch (error) {

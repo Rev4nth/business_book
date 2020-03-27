@@ -14,7 +14,7 @@ class EditCustomer extends StatefulWidget {
 
 class _EditCustomerState extends State<EditCustomer> {
   final _form = GlobalKey<FormState>();
-  final _baseUrl = 'http://192.168.1.2:3000';
+  final _baseUrl = 'http://192.168.1.7:3000';
   Customer _customer = Customer();
 
   void _saveCustomer() {

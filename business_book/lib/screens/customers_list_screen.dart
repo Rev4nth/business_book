@@ -13,7 +13,7 @@ class CustomersListScreen extends StatefulWidget {
 }
 
 class _CustomersListScreenState extends State<CustomersListScreen> {
-  final _baseUrl = 'http://192.168.1.2:3000';
+  final _baseUrl = 'http://192.168.1.7:3000';
   List<Customer> _customersList = [];
   bool _loading = true;
 

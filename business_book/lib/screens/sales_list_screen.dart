@@ -13,7 +13,7 @@ class SalesListScreen extends StatefulWidget {
 }
 
 class _SalesListScreenState extends State<SalesListScreen> {
-  final _baseUrl = 'http://192.168.1.2:3000';
+  final _baseUrl = 'http://192.168.1.7:3000';
   List<Sale> _salesList = [];
   bool _loading = true;
 
