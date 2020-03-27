@@ -7,7 +7,9 @@ router
   .route("/")
   .get(async (req, res, next) => {
     try {
-      const customers = await db.Customer.findAll({});
+      const customers = await db.Customer.findAll({
+        attributes: ["id", "name", "contact"]
+      });
       res.json(customers);
     } catch (error) {
       res.json({ error });

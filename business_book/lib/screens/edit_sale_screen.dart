@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../models/sale.dart';
+import '../models/customer.dart';
 import './sales_list_screen.dart';
 
 class EditSale extends StatefulWidget {
@@ -17,6 +18,21 @@ class _EditSaleState extends State<EditSale> {
   final _form = GlobalKey<FormState>();
   final _baseUrl = 'http://192.168.1.7:3000';
   Sale _sale = Sale();
+
+  List<Customer> _customersList = [];
+  bool _loading = true;
+
+  void getCustomers() {
+    final url = '$_baseUrl/api/customers/';
+    http.get(url).then((response) {
+      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+      List<Customer> customersList =
+          parsed.map<Customer>((json) => Customer.fromJson(json)).toList();
+      setState(() {
+        _customersList = customersList;
+      });
+    });
+  }
 
   void _presentDatePicker() {
     showDatePicker(
@@ -60,6 +76,10 @@ class _EditSaleState extends State<EditSale> {
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      _loading = false;
+      getCustomers();
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Sale"),
@@ -70,6 +90,26 @@ class _EditSaleState extends State<EditSale> {
           key: _form,
           child: ListView(
             children: <Widget>[
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("Customer"),
+                    DropdownButton<int>(
+                      value: _sale.customerId,
+                      items: _customersList.map((Customer customer) {
+                        return DropdownMenuItem(
+                            value: customer.id, child: Text(customer.name));
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _sale.customerId = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Description'),
                 validator: (value) {

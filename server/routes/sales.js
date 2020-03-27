@@ -8,7 +8,10 @@ router
   .route("/")
   .get(async (req, res, next) => {
     try {
-      const sales = await db.Sale.findAll({});
+      const sales = await db.Sale.findAll({
+        attributes: ["id", "description", "amount", "saleDate"],
+        include: [{ model: db.Customer }]
+      });
       res.json(sales);
     } catch (error) {
       res.json({ error });
@@ -20,8 +23,8 @@ router
       const sale = await db.Sale.create({
         description: req.body.description,
         amount: parseInt(req.body.amount),
-        //   accountId: parseInt(req.params.accountId)
-        saleDate: req.body.date
+        saleDate: req.body.date,
+        customerId: req.body.customerId
       });
       res.json(sale);
     } catch (error) {
