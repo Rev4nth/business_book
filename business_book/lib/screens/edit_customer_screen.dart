@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import './customers_list_screen.dart';
 import '../models/customer.dart';
+import '../services/api.dart';
 
 class EditCustomer extends StatefulWidget {
   static const routeName = '/edit-customer';
@@ -14,7 +14,7 @@ class EditCustomer extends StatefulWidget {
 
 class _EditCustomerState extends State<EditCustomer> {
   final _form = GlobalKey<FormState>();
-  final _baseUrl = 'http://192.168.1.7:3000';
+  final _baseUrl = ApiService.baseUrl;
   Customer _customer = Customer();
 
   void _saveCustomer() {
@@ -31,7 +31,6 @@ class _EditCustomerState extends State<EditCustomer> {
     );
     Navigator.of(context).popAndPushNamed(
       '/',
-      arguments: 1,
     );
   }
 

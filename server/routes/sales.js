@@ -1,12 +1,12 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
 
-var db = require("../models");
+const db = require("../models");
+const auth = require("../authenticate");
 
-/* GET users listing. */
 router
   .route("/")
-  .get(async (req, res, next) => {
+  .get(auth, async (req, res, next) => {
     try {
       const sales = await db.Sale.findAll({
         attributes: ["id", "description", "amount", "saleDate"],
@@ -14,10 +14,12 @@ router
       });
       res.json(sales);
     } catch (error) {
-      res.json({ error });
+      res.status(500).send({
+        error
+      });
     }
   })
-  .post(async (req, res, next) => {
+  .post(auth, async (req, res, next) => {
     try {
       console.log(req.body);
       const sale = await db.Sale.create({
@@ -28,13 +30,15 @@ router
       });
       res.json(sale);
     } catch (error) {
-      res.json({ error });
+      res.status(500).send({
+        error
+      });
     }
   });
 
 router
   .route("/:saleId")
-  .get(async (req, res, next) => {
+  .get(auth, async (req, res, next) => {
     try {
       const sales = await db.Sale.findAll({
         where: {
@@ -43,10 +47,12 @@ router
       });
       res.json(sale);
     } catch (error) {
-      res.json({ error });
+      res.status(500).send({
+        error
+      });
     }
   })
-  .put(async (req, res, next) => {
+  .put(auth, async (req, res, next) => {
     try {
       const sale = await db.Sale.update(
         { where: { id: req.params.saleId } },
@@ -59,7 +65,9 @@ router
       );
       res.json(sale);
     } catch (error) {
-      res.json({ error });
+      res.status(500).send({
+        error
+      });
     }
   });
 

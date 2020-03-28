@@ -2,17 +2,20 @@ var express = require("express");
 var router = express.Router();
 
 var db = require("../models");
+const auth = require("../authenticate");
 
 router
   .route("/")
-  .get(async (req, res, next) => {
+  .get(auth, async (req, res, next) => {
     try {
       const customers = await db.Customer.findAll({
         attributes: ["id", "name", "contact"]
       });
       res.json(customers);
     } catch (error) {
-      res.json({ error });
+      res.status(500).send({
+        error
+      });
     }
   })
   .post(async (req, res, next) => {
@@ -23,7 +26,9 @@ router
       });
       res.json(customer);
     } catch (error) {
-      res.json({ error });
+      res.status(500).send({
+        error
+      });
     }
   });
 

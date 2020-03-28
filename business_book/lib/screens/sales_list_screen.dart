@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/sale_item.dart';
 import '../models/sale.dart';
+import '../services/api.dart';
+import '../storage_util.dart';
 
 class SalesListScreen extends StatefulWidget {
   static const routeName = '/';
@@ -13,13 +16,17 @@ class SalesListScreen extends StatefulWidget {
 }
 
 class _SalesListScreenState extends State<SalesListScreen> {
-  final _baseUrl = 'http://192.168.1.7:3000';
+  final _baseUrl = ApiService.baseUrl;
   List<Sale> _salesList = [];
   bool _loading = true;
 
-  void getSales() {
+  void getSales() async {
     final url = '$_baseUrl/api/sales/';
-    http.get(url).then((response) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    http.get(url, headers: {
+      'Authorization': 'Bearer $token',
+    }).then((response) {
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
       List<Sale> salesList =
           parsed.map<Sale>((json) => Sale.fromJson(json)).toList();

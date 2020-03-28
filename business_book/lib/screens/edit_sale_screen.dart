@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../models/sale.dart';
 import '../models/customer.dart';
 import './sales_list_screen.dart';
+import '../services/api.dart';
 
 class EditSale extends StatefulWidget {
   static const routeName = '/edit-sale';
@@ -16,7 +17,7 @@ class EditSale extends StatefulWidget {
 
 class _EditSaleState extends State<EditSale> {
   final _form = GlobalKey<FormState>();
-  final _baseUrl = 'http://192.168.1.7:3000';
+  final _baseUrl = ApiService.baseUrl;
   Sale _sale = Sale();
 
   List<Customer> _customersList = [];
