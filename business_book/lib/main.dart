@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './screens/tabs_screen.dart';
 import './screens/edit_sale_screen.dart';
 import './screens/edit_customer_screen.dart';
 import './screens/login_screen.dart';
+import './providers/auth.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Business Book",
-      routes: {
-        '/tabs': (context) => TabsScreen(),
-        '/': (context) => LoginScreen(),
-        '/edit-sale': (context) => EditSale(),
-        '/edit-customer': (context) => EditCustomer(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => Auth(),
+        )
+      ],
+      child: Consumer<Auth>(
+        builder: (context, auth, _) => MaterialApp(
+          title: "Business Book",
+          home: auth.isAuth ? TabsScreen() : LoginScreen(),
+          routes: {
+            '/tabs': (context) => TabsScreen(),
+            '/auth': (context) => LoginScreen(),
+            '/edit-sale': (context) => EditSale(),
+            '/edit-customer': (context) => EditCustomer(),
+          },
+        ),
+      ),
     );
   }
 }

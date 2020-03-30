@@ -4,8 +4,10 @@ import './customers_list_screen.dart';
 import './edit_sale_screen.dart';
 import './sales_list_screen.dart';
 import './edit_customer_screen.dart';
+import '../widgets/app_drawer.dart';
 
 class TabsScreen extends StatefulWidget {
+  static const routeName = '/';
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
@@ -54,6 +56,7 @@ class _TabsScreenState extends State<TabsScreen> {
             )
           ],
         ),
+        drawer: AppDrawer(),
         body: _pages[_selectedPageIndex]['page'],
         bottomNavigationBar: BottomNavigationBar(
           onTap: _selectPage,

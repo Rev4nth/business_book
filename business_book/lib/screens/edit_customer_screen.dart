@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/customer.dart';
 import '../services/api.dart';
@@ -17,16 +18,21 @@ class _EditCustomerState extends State<EditCustomer> {
   final _baseUrl = ApiService.baseUrl;
   Customer _customer = Customer();
 
-  void _saveCustomer() {
+  void _saveCustomer() async {
     var isValid = _form.currentState.validate();
     if (!isValid) {
       return;
     }
     _form.currentState.save();
     final url = '$_baseUrl/api/customers/';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
     http.post(
       url,
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer $token',
+      },
       body: json.encode(_customer),
     );
     Navigator.of(context).popAndPushNamed(

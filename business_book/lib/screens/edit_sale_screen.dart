@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/sale.dart';
 import '../models/customer.dart';
@@ -23,9 +24,13 @@ class _EditSaleState extends State<EditSale> {
   List<Customer> _customersList = [];
   bool _loading = true;
 
-  void getCustomers() {
+  void getCustomers() async {
     final url = '$_baseUrl/api/customers/';
-    http.get(url).then((response) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    http.get(url, headers: {
+      'Authorization': 'Bearer $token',
+    }).then((response) {
       final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
       List<Customer> customersList =
           parsed.map<Customer>((json) => Customer.fromJson(json)).toList();
@@ -58,16 +63,21 @@ class _EditSaleState extends State<EditSale> {
     return item;
   }
 
-  void _saveSale() {
+  void _saveSale() async {
     var isValid = _form.currentState.validate();
     if (!isValid) {
       return;
     }
     _form.currentState.save();
     final url = '$_baseUrl/api/sales/';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
     http.post(
       url,
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer $token',
+      },
       body: json.encode(_sale.toJson(), toEncodable: encodeDateToString),
     );
     Navigator.of(context).popAndPushNamed(

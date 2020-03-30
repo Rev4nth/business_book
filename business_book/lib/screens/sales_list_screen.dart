@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/sale_item.dart';
 import '../models/sale.dart';
 import '../services/api.dart';
-import '../storage_util.dart';
 
 class SalesListScreen extends StatefulWidget {
   static const routeName = '/';
