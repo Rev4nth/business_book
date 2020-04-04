@@ -6,7 +6,7 @@ const generateToken = require("../generateToken");
 
 router.route("/").get((req, res, next) => {
   res.json({
-    app: "bb",
+    app: "bbc",
   });
 });
 
