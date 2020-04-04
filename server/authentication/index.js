@@ -8,9 +8,9 @@ const auth = async (req, res, next) => {
 
     const users = await db.User.findAll({
       where: {
-        email: verifiedToken.email
+        email: verifiedToken.email,
       },
-      raw: true
+      raw: true,
     });
 
     if (!users.length) {
@@ -22,7 +22,7 @@ const auth = async (req, res, next) => {
     next();
   } catch (e) {
     res.status(401).send({
-      error: "You are not authenticated"
+      error: "You are not authenticated",
     });
   }
 };

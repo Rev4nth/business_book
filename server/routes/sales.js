@@ -10,12 +10,15 @@ router
     try {
       const sales = await db.Sale.findAll({
         attributes: ["id", "description", "amount", "saleDate"],
-        include: [{ model: db.Customer }]
+        include: [{ model: db.Customer }],
+        where: {
+          userId: req.user.id,
+        },
       });
       res.json(sales);
     } catch (error) {
       res.status(500).send({
-        error
+        error: error.toString(),
       });
     }
   })
@@ -26,12 +29,13 @@ router
         description: req.body.description,
         amount: parseInt(req.body.amount),
         saleDate: req.body.date,
-        customerId: req.body.customerId
+        customerId: req.body.customerId,
+        userId: req.user.id,
       });
       res.json(sale);
     } catch (error) {
       res.status(500).send({
-        error
+        error: error.toString(),
       });
     }
   });
@@ -42,13 +46,13 @@ router
     try {
       const sales = await db.Sale.findAll({
         where: {
-          id: req.params.saleId
-        }
+          id: req.params.saleId,
+        },
       });
       res.json(sale);
     } catch (error) {
       res.status(500).send({
-        error
+        error,
       });
     }
   })
@@ -58,7 +62,7 @@ router
         { where: { id: req.params.saleId } },
         {
           description: req.body.description,
-          amount: parseInt(req.body.amount)
+          amount: parseInt(req.body.amount),
           //   accountId: parseInt(req.params.accountId)
           // saleDate: req.body.saleDate
         }
@@ -66,7 +70,7 @@ router
       res.json(sale);
     } catch (error) {
       res.status(500).send({
-        error
+        error,
       });
     }
   });

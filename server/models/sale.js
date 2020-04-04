@@ -5,13 +5,16 @@ module.exports = (sequelize, DataTypes) => {
     {
       description: DataTypes.TEXT,
       amount: DataTypes.INTEGER,
-      saleDate: DataTypes.DATE
+      saleDate: DataTypes.DATE,
     },
     {}
   );
-  Sale.associate = function(models) {
+  Sale.associate = function (models) {
     Sale.belongsTo(models.Customer, {
-      foreignKey: "customerId"
+      foreignKey: "customerId",
+    });
+    Sale.belongsTo(models.User, {
+      foreignKey: "userId",
     });
   };
   return Sale;
