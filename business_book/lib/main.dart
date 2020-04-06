@@ -5,6 +5,8 @@ import './screens/tabs_screen.dart';
 import './screens/edit_sale_screen.dart';
 import './screens/edit_customer_screen.dart';
 import './screens/login_screen.dart';
+import './screens/sale_detail_screen.dart';
+
 import './providers/auth.dart';
 import './providers/sales.dart';
 import './providers/customers.dart';
@@ -23,12 +25,17 @@ class MyApp extends StatelessWidget {
       child: Consumer<Auth>(
         builder: (context, auth, _) => MaterialApp(
           title: "Business Book",
+          theme: ThemeData(
+            primarySwatch: Colors.indigo,
+            accentColor: Colors.cyanAccent,
+          ),
           home: auth.isAuth ? TabsScreen() : LoginScreen(),
           routes: {
             '/tabs': (context) => TabsScreen(),
             '/auth': (context) => LoginScreen(),
             '/edit-sale': (context) => EditSale(),
             '/edit-customer': (context) => EditCustomer(),
+            SaleDetailScreen.routeName: (context) => SaleDetailScreen(),
           },
         ),
       ),

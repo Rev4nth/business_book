@@ -44,14 +44,16 @@ router
   .get(auth, async (req, res, next) => {
     try {
       const sales = await db.Sale.findAll({
+        attributes: ["id", "description", "amount", "saleDate"],
+        include: [{ model: db.Customer }],
         where: {
           id: req.params.saleId,
         },
       });
-      res.json(sale);
+      res.json(sales[0]);
     } catch (error) {
       res.status(500).send({
-        error,
+        error: error.toString(),
       });
     }
   })

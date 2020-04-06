@@ -40,40 +40,42 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(_pages[_selectedPageIndex]['title']),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                if (_pages[_selectedPageIndex]['title'] == 'Sales') {
-                  Navigator.of(context).pushNamed(EditSale.routeName);
-                }
-                if (_pages[_selectedPageIndex]['title'] == 'Customers') {
-                  Navigator.of(context).pushNamed(EditCustomer.routeName);
-                }
-              },
-            )
-          ],
-        ),
-        drawer: AppDrawer(),
-        body: _pages[_selectedPageIndex]['page'],
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: _selectPage,
-          currentIndex: _selectedPageIndex,
-          type: BottomNavigationBarType.fixed,
-          items: [
-            BottomNavigationBarItem(
-              backgroundColor: Theme.of(context).primaryColor,
-              icon: Icon(Icons.work),
-              title: Text('Sales'),
-            ),
-            BottomNavigationBarItem(
-              backgroundColor: Theme.of(context).primaryColor,
-              icon: Icon(Icons.people),
-              title: Text('Customers'),
-            ),
-          ],
-        ));
+      backgroundColor: Color.fromRGBO(248, 248, 248, 1),
+      appBar: AppBar(
+        title: Text(_pages[_selectedPageIndex]['title']),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              if (_pages[_selectedPageIndex]['title'] == 'Sales') {
+                Navigator.of(context).pushNamed(EditSale.routeName);
+              }
+              if (_pages[_selectedPageIndex]['title'] == 'Customers') {
+                Navigator.of(context).pushNamed(EditCustomer.routeName);
+              }
+            },
+          )
+        ],
+      ),
+      drawer: AppDrawer(),
+      body: _pages[_selectedPageIndex]['page'],
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: _selectPage,
+        currentIndex: _selectedPageIndex,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).primaryColor,
+            icon: Icon(Icons.work),
+            title: Text('Sales'),
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).primaryColor,
+            icon: Icon(Icons.people),
+            title: Text('Customers'),
+          ),
+        ],
+      ),
+    );
   }
 }

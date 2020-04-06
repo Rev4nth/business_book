@@ -37,6 +37,7 @@ class _SalesListScreenState extends State<SalesListScreen> {
           itemCount: sales.items.length,
           itemBuilder: (context, index) {
             return SaleItem(
+              id: sales.items[index].id,
               description: sales.items[index].description,
               amount: sales.items[index].amount,
               saleDate: sales.items[index].saleDate,
