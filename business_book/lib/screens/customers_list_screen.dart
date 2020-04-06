@@ -1,12 +1,8 @@
-import 'dart:convert';
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/customer_item.dart';
-import '../models/customer.dart';
-import '../services/api.dart';
+import '../providers/customers.dart';
 
 class CustomersListScreen extends StatefulWidget {
   static const routeName = '/customers';
@@ -15,39 +11,34 @@ class CustomersListScreen extends StatefulWidget {
 }
 
 class _CustomersListScreenState extends State<CustomersListScreen> {
-  final _baseUrl = ApiService.baseUrl;
-  List<Customer> _customersList = [];
-  bool _loading = true;
-
-  void getCustomers() async {
-    final url = '$_baseUrl/api/customers/';
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
-    http.get(url, headers: {
-      'Authorization': 'Bearer $token',
-    }).then((response) {
-      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-      List<Customer> customersList =
-          parsed.map<Customer>((json) => Customer.fromJson(json)).toList();
+  var _isInit = true;
+  var _isLoading = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isInit) {
       setState(() {
-        _customersList = customersList;
+        _isLoading = true;
       });
-    });
+      Provider.of<Customers>(context).fetchAndSetCustomers().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
-      _loading = false;
-      getCustomers();
-    }
+    final customers = Provider.of<Customers>(context);
     return Container(
       child: ListView.builder(
-          itemCount: _customersList.length,
+          itemCount: customers.items.length,
           itemBuilder: (context, index) {
             return CustomerItem(
-              name: _customersList[index].name,
-              contact: _customersList[index].contact,
+              name: customers.items[index].name,
+              contact: customers.items[index].contact,
             );
           }),
     );

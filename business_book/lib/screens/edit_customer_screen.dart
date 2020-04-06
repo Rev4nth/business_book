@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/customer.dart';
+import '../providers/customers.dart';
 import '../services/api.dart';
 
 class EditCustomer extends StatefulWidget {

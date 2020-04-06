@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       description: DataTypes.TEXT,
       amount: DataTypes.INTEGER,
-      saleDate: DataTypes.DATE,
+      saleDate: DataTypes.DATEONLY,
     },
     {}
   );

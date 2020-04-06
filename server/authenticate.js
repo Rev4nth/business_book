@@ -5,14 +5,13 @@ const db = require("./models");
 const auth = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
-    console.log(req.header("Authorization"));
     const verifiedToken = jwt.verify(token, process.env.SECRET_KEY);
 
     const users = await db.User.findAll({
       where: {
-        email: verifiedToken.email
+        email: verifiedToken.email,
       },
-      raw: true
+      raw: true,
     });
 
     if (!users.length) {
@@ -23,9 +22,8 @@ const auth = async (req, res, next) => {
     req.token = token;
     next();
   } catch (e) {
-    console.log(e);
     res.status(401).send({
-      error: "You are not authenticated"
+      error: "You are not authenticated",
     });
   }
 };

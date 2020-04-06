@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/sale_item.dart';
-import '../models/sale.dart';
-import '../services/api.dart';
+import '../providers/sales.dart';
 
 class SalesListScreen extends StatefulWidget {
   static const routeName = '/';
@@ -15,39 +11,36 @@ class SalesListScreen extends StatefulWidget {
 }
 
 class _SalesListScreenState extends State<SalesListScreen> {
-  final _baseUrl = ApiService.baseUrl;
-  List<Sale> _salesList = [];
-  bool _loading = true;
-
-  void getSales() async {
-    final url = '$_baseUrl/api/sales/';
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
-    http.get(url, headers: {
-      'Authorization': 'Bearer $token',
-    }).then((response) {
-      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-      List<Sale> salesList =
-          parsed.map<Sale>((json) => Sale.fromJson(json)).toList();
+  var _isInit = true;
+  var _isLoading = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isInit) {
       setState(() {
-        _salesList = salesList;
+        _isLoading = true;
       });
-    });
+      Provider.of<Sales>(context).fetchAndSetSales().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
-      _loading = false;
-      getSales();
-    }
+    final sales = Provider.of<Sales>(context);
     return Container(
       child: ListView.builder(
-          itemCount: _salesList.length,
+          itemCount: sales.items.length,
           itemBuilder: (context, index) {
             return SaleItem(
-              description: _salesList[index].description,
-              amount: _salesList[index].amount,
+              description: sales.items[index].description,
+              amount: sales.items[index].amount,
+              saleDate: sales.items[index].saleDate,
+              customer: sales.items[index].customer,
             );
           }),
     );

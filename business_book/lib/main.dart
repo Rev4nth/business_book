@@ -6,6 +6,8 @@ import './screens/edit_sale_screen.dart';
 import './screens/edit_customer_screen.dart';
 import './screens/login_screen.dart';
 import './providers/auth.dart';
+import './providers/sales.dart';
+import './providers/customers.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,9 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => Auth(),
-        )
+        ChangeNotifierProvider<Auth>(create: (_) => Auth()),
+        ChangeNotifierProvider<Sales>(create: (_) => Sales()),
+        ChangeNotifierProvider<Customers>(create: (_) => Customers()),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) => MaterialApp(

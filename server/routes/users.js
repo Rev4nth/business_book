@@ -8,13 +8,13 @@ router.route("/token").post(async (req, res, next) => {
   try {
     let users = await db.User.findAll({
       where: { email: req.body.email },
-      raw: true
+      raw: true,
     });
     let user;
     if (!users.length) {
       user = await db.User.create({
         displayName: req.body.displayName,
-        email: req.body.email
+        email: req.body.email,
       });
     } else {
       user = users[0];
@@ -22,9 +22,8 @@ router.route("/token").post(async (req, res, next) => {
     const token = generateToken(user.email);
     res.send({ user, token });
   } catch (error) {
-    console.log(error);
     res.status(500).send({
-      error
+      error: error.toString(),
     });
   }
 });

@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/sale.dart';
-import '../models/customer.dart';
+import '../providers/sales.dart';
+import '../providers/customers.dart';
 import './sales_list_screen.dart';
 import '../services/api.dart';
 
@@ -51,7 +51,7 @@ class _EditSaleState extends State<EditSale> {
         return;
       }
       setState(() {
-        _sale.date = pickedDate;
+        _sale.saleDate = pickedDate;
       });
     });
   }
@@ -159,9 +159,9 @@ class _EditSaleState extends State<EditSale> {
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        _sale.date == null
+                        _sale.saleDate == null
                             ? 'No Date Chosen!'
-                            : 'Sale Date: ${DateFormat.yMd().format(_sale.date)}',
+                            : 'Sale Date: ${DateFormat.yMd().format(_sale.saleDate)}',
                       ),
                     ),
                     FlatButton(
