@@ -31,18 +31,15 @@ class Auth with ChangeNotifier {
 
   Future<void> signIn() async {
     GoogleSignInAccount account = await _googleSignIn.signIn();
+    GoogleSignInAuthentication googleAuth = await account.authentication;
+
     final _baseUrl = ApiService.baseUrl;
     final url = '$_baseUrl/api/users/token/';
     try {
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
-        body: json.encode(
-          {
-            'email': account.email,
-            'displayName': account.displayName,
-          },
-        ),
+        body: json.encode({'idToken': googleAuth.idToken}),
       );
       final responseData = json.decode(response.body);
       _token = responseData['token'];

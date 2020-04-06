@@ -3,18 +3,21 @@ const router = express.Router();
 
 const db = require("../models");
 const generateToken = require("../generateToken");
+const googleAuth = require("../googleAuth");
 
 router.route("/token").post(async (req, res, next) => {
   try {
+    const idToken = req.body.idToken;
+    const profile = await googleAuth.getProfileInfo(idToken);
     let users = await db.User.findAll({
-      where: { email: req.body.email },
+      where: { email: profile.email },
       raw: true,
     });
     let user;
     if (!users.length) {
       user = await db.User.create({
-        displayName: req.body.displayName,
-        email: req.body.email,
+        displayName: profile.name,
+        email: profile.email,
       });
     } else {
       user = users[0];
@@ -22,6 +25,7 @@ router.route("/token").post(async (req, res, next) => {
     const token = generateToken(user.email);
     res.send({ user, token });
   } catch (error) {
+    console.log(error);
     res.status(500).send({
       error: error.toString(),
     });
