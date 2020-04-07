@@ -74,6 +74,20 @@ router
         error,
       });
     }
+  })
+  .delete(auth, async (req, res, next) => {
+    try {
+      const isDeleted = await db.Sale.destroy({
+        where: { id: req.params.saleId },
+      });
+      res.json({
+        isDeleted: Boolean(isDeleted),
+      });
+    } catch (error) {
+      res.status(500).send({
+        error,
+      });
+    }
   });
 
 module.exports = router;
