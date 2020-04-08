@@ -5,10 +5,10 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../providers/sales.dart';
-import '../providers/customers.dart';
 import './sales_list_screen.dart';
 import '../services/api.dart';
+import '../models/customer.dart';
+import '../models/sale.dart';
 
 class EditSale extends StatefulWidget {
   static const routeName = '/edit-sale';
@@ -92,96 +92,157 @@ class _EditSaleState extends State<EditSale> {
       getCustomers();
     }
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text("Add Sale"),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Form(
-          key: _form,
-          child: ListView(
-            children: <Widget>[
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("Customer"),
-                    DropdownButton<int>(
-                      value: _sale.customerId,
-                      items: _customersList.map((Customer customer) {
-                        return DropdownMenuItem(
-                            value: customer.id, child: Text(customer.name));
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _sale.customerId = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Description'),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter sale description.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _sale.description = value;
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Amount'),
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter an amount.';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'Please enter a valid number.';
-                  }
-                  if (double.parse(value) <= 0) {
-                    return 'Please enter a number greater than zero.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _sale.amount = int.parse(value);
-                },
-              ),
-              Container(
-                height: 70,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        _sale.saleDate == null
-                            ? 'No Date Chosen!'
-                            : 'Sale Date: ${DateFormat.yMd().format(_sale.saleDate)}',
+      body: Container(
+        padding: EdgeInsets.all(8),
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Form(
+              key: _form,
+              child: ListView(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
                       ),
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),
-                    FlatButton(
-                      textColor: Theme.of(context).primaryColor,
-                      child: Text(
-                        'Choose Date',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Customer",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 13,
+                          ),
                         ),
-                      ),
-                      onPressed: _presentDatePicker,
+                        DropdownButton<int>(
+                          value: _sale.customerId,
+                          hint: Text('Select a customer'),
+                          items: _customersList.map((Customer customer) {
+                            return DropdownMenuItem(
+                                value: customer.id, child: Text(customer.name));
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _sale.customerId = value;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Divider(),
+                  TextFormField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'Description',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(4)),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter sale description.';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _sale.description = value;
+                    },
+                  ),
+                  SizedBox(height: 6),
+                  Divider(),
+                  SizedBox(height: 6),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Amount',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(4)),
+                      ),
+                    ),
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter an amount.';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Please enter a valid number.';
+                      }
+                      if (double.parse(value) <= 0) {
+                        return 'Please enter a number greater than zero.';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _sale.amount = int.parse(value);
+                    },
+                  ),
+                  SizedBox(height: 6),
+                  Divider(),
+                  SizedBox(height: 6),
+                  Container(
+                    padding: EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                    ),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Sale happened on",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 13,
+                            ),
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  _sale.saleDate == null
+                                      ? 'No Date Chosen!'
+                                      : '${DateFormat("d MMMM, y").format(_sale.saleDate)}',
+                                ),
+                              ),
+                              FlatButton(
+                                textColor: Theme.of(context).primaryColor,
+                                child: Text(
+                                  'Choose Date',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: _presentDatePicker,
+                              ),
+                            ],
+                          ),
+                        ]),
+                  ),
+                  SizedBox(height: 6),
+                  Divider(),
+                  SizedBox(height: 6),
+                  RaisedButton(
+                    onPressed: _saveSale,
+                    child: new Text('Save'),
+                    color: Theme.of(context).accentColor,
+                    textColor: Colors.white,
+                  )
+                ],
               ),
-              RaisedButton(
-                onPressed: _saveSale,
-                child: new Text('Save'),
-              )
-            ],
+            ),
           ),
         ),
       ),

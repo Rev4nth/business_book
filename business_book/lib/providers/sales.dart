@@ -5,49 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/api.dart';
-import './customers.dart';
-
-class Sale {
-  int id;
-  String description;
-  int amount;
-  DateTime saleDate;
-  int customerId;
-  Customer customer;
-
-  Sale(
-      {this.id,
-      this.description,
-      this.amount,
-      this.saleDate,
-      this.customer,
-      this.customerId});
-
-  Sale.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    description = json['description'];
-    amount = json['amount'];
-    saleDate =
-        json['saleDate'] != null ? DateTime.parse(json['saleDate']) : null;
-    customerId = json['customerId'];
-    customer = json['Customer'] != null
-        ? new Customer.fromJson(json['Customer'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id ?? '';
-    data['description'] = this.description;
-    data['amount'] = this.amount;
-    data['saleDate'] = this.saleDate;
-    data['customerId'] = this.customerId;
-    if (this.customer != null) {
-      data['Customer'] = this.customer.toJson();
-    }
-    return data;
-  }
-}
+import '../models/sale.dart';
 
 class Sales with ChangeNotifier {
   List<Sale> _sales = [];

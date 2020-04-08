@@ -23,12 +23,24 @@ router
   })
   .post(auth, async (req, res, next) => {
     try {
-      const customer = await db.Customer.create({
-        name: req.body.name,
-        contact: req.body.contact,
-        userId: req.user.id,
+      const customers = await db.Customer.findAll({
+        where: {
+          userId: req.user.id,
+          contact: req.body.contact,
+        },
       });
-      res.json(customer);
+      if (customers.length > 0) {
+        res.status(400).send({
+          error: "Customer with this contact number already exists",
+        });
+      } else {
+        const customer = await db.Customer.create({
+          name: req.body.name,
+          contact: req.body.contact,
+          userId: req.user.id,
+        });
+        res.json(customer);
+      }
     } catch (error) {
       res.status(500).send({
         error: error.toString(),

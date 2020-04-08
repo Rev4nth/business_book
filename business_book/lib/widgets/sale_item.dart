@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../providers/customers.dart';
 import '../screens/sale_detail_screen.dart';
+import '../models/customer.dart';
 
 class SaleItem extends StatelessWidget {
   final int id;

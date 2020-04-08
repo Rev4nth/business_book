@@ -25,10 +25,6 @@ class MyApp extends StatelessWidget {
       child: Consumer<Auth>(
         builder: (context, auth, _) => MaterialApp(
           title: "Business Book",
-          theme: ThemeData(
-            primarySwatch: Colors.indigo,
-            accentColor: Colors.cyanAccent,
-          ),
           home: auth.isAuth ? TabsScreen() : LoginScreen(),
           routes: {
             '/tabs': (context) => TabsScreen(),
