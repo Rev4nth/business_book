@@ -81,7 +81,7 @@ class _EditCustomerState extends State<EditCustomer> {
                         return null;
                       },
                       onSaved: (value) {
-                        _customer.name = value;
+                        _customer.name = value.trim();
                       },
                     ),
                     SizedBox(height: 16),

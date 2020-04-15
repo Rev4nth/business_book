@@ -6,6 +6,7 @@ import './screens/edit_sale_screen.dart';
 import './screens/edit_customer_screen.dart';
 import './screens/login_screen.dart';
 import './screens/sale_detail_screen.dart';
+import './screens/customer_detail_screen.dart';
 
 import './providers/auth.dart';
 import './providers/sales.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
             '/edit-sale': (context) => EditSale(),
             '/edit-customer': (context) => EditCustomer(),
             SaleDetailScreen.routeName: (context) => SaleDetailScreen(),
+            CustomerDetailScreen.routeName: (context) => CustomerDetailScreen()
           },
         ),
       ),

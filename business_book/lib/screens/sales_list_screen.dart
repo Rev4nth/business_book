@@ -47,7 +47,6 @@ class _SalesListScreenState extends State<SalesListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final sales = Provider.of<Sales>(context);
     return _isLoading
         ? Center(
             child: CircularProgressIndicator(),

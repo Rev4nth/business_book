@@ -23,15 +23,30 @@ router
   })
   .post(auth, async (req, res, next) => {
     try {
-      const customers = await db.Customer.findAll({
+      const customersContacts = await db.Customer.findAll({
         where: {
           userId: req.user.id,
           contact: req.body.contact,
         },
       });
-      if (customers.length > 0) {
+      console.log("contacts", customersContacts.length);
+      const customersNames = await db.Customer.findAll({
+        where: {
+          userId: req.user.id,
+          $col: db.sequelize.where(
+            db.sequelize.fn("lower", db.sequelize.col("name")),
+            db.sequelize.fn("lower", req.body.name)
+          ),
+        },
+      });
+      console.log("names", customersNames.length);
+      if (customersContacts.length > 0) {
         res.status(400).send({
           error: "Customer with this contact number already exists",
+        });
+      } else if (customersNames.length > 0) {
+        res.status(400).send({
+          error: "Customer with this name already exists",
         });
       } else {
         const customer = await db.Customer.create({
@@ -42,10 +57,28 @@ router
         res.json(customer);
       }
     } catch (error) {
+      console.log(error);
       res.status(500).send({
         error: error.toString(),
       });
     }
   });
+
+router.route("/:customerId").get(auth, async (req, res, next) => {
+  try {
+    const customer = await db.Customer.findOne({
+      attributes: ["id", "name", "contact"],
+      where: {
+        id: req.params.customerId,
+      },
+    });
+    res.json(customer);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      error: error.toString(),
+    });
+  }
+});
 
 module.exports = router;
