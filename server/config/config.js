@@ -22,11 +22,10 @@ module.exports = {
     host: "127.0.0.1",
     dialect: "postgres",
   },
+  staging: {
+    use_env_variable: "RDS_STAGING_DATABASE_URL",
+  },
   production: {
-    username: "root",
-    password: null,
-    database: "database_production",
-    host: "127.0.0.1",
-    dialect: "postgres",
+    use_env_variable: "RDS_DATABASE_URL",
   },
 };
