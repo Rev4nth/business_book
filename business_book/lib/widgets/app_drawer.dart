@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/profile_screen.dart';
 import '../providers/auth.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -10,8 +11,24 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text('Hello Friend!'),
+            title: Text('Business Book'),
             automaticallyImplyLeading: false,
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Home'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed('/');
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('Profile'),
+            onTap: () {
+              Navigator.of(context)
+                  .pushReplacementNamed(ProfileScreen.routeName);
+            },
           ),
           Divider(),
           ListTile(

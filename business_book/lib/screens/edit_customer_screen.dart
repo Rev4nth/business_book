@@ -8,13 +8,13 @@ import '../services/api.dart';
 import '../models/customer.dart';
 import './tabs_screen.dart';
 
-class EditCustomer extends StatefulWidget {
+class EditCustomerScreen extends StatefulWidget {
   static const routeName = '/edit-customer';
   @override
-  _EditCustomerState createState() => _EditCustomerState();
+  _EditCustomerScreenState createState() => _EditCustomerScreenState();
 }
 
-class _EditCustomerState extends State<EditCustomer> {
+class _EditCustomerScreenState extends State<EditCustomerScreen> {
   final _form = GlobalKey<FormState>();
   final _baseUrl = ApiService.baseUrl;
   Customer _customer = Customer();

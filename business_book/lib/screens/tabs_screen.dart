@@ -7,7 +7,7 @@ import './edit_customer_screen.dart';
 import '../widgets/app_drawer.dart';
 
 class TabsScreen extends StatefulWidget {
-  static const routeName = '/';
+  static const routeName = '/tabs';
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
@@ -48,10 +48,10 @@ class _TabsScreenState extends State<TabsScreen> {
             icon: Icon(Icons.add),
             onPressed: () {
               if (_pages[_selectedPageIndex]['title'] == 'Sales') {
-                Navigator.of(context).pushNamed(EditSale.routeName);
+                Navigator.of(context).pushNamed(EditSaleScreen.routeName);
               }
               if (_pages[_selectedPageIndex]['title'] == 'Customers') {
-                Navigator.of(context).pushNamed(EditCustomer.routeName);
+                Navigator.of(context).pushNamed(EditCustomerScreen.routeName);
               }
             },
           )

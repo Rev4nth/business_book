@@ -1,18 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../widgets/sale_item.dart';
-import '../services/api.dart';
-import '../models/sale.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/sales.dart';
+import '../widgets/sale_item.dart';
 
 class SalesListScreen extends StatefulWidget {
-  static const routeName = '/';
+  static const routeName = '/tabs';
   @override
   _SalesListScreenState createState() => _SalesListScreenState();
 }

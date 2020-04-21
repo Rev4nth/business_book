@@ -7,10 +7,12 @@ import './screens/edit_customer_screen.dart';
 import './screens/login_screen.dart';
 import './screens/sale_detail_screen.dart';
 import './screens/customer_detail_screen.dart';
+import './screens/profile_screen.dart';
 
 import './providers/auth.dart';
 import './providers/sales.dart';
 import './providers/customers.dart';
+import './providers/user.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<Auth>(create: (_) => Auth()),
+        ChangeNotifierProvider<User>(create: (_) => User()),
         ChangeNotifierProvider<Sales>(create: (_) => Sales()),
         ChangeNotifierProvider<Customers>(create: (_) => Customers()),
       ],
@@ -30,10 +33,11 @@ class MyApp extends StatelessWidget {
           routes: {
             '/tabs': (context) => TabsScreen(),
             '/auth': (context) => LoginScreen(),
-            '/edit-sale': (context) => EditSale(),
-            '/edit-customer': (context) => EditCustomer(),
+            EditSaleScreen.routeName: (context) => EditSaleScreen(),
+            EditCustomerScreen.routeName: (context) => EditCustomerScreen(),
             SaleDetailScreen.routeName: (context) => SaleDetailScreen(),
-            CustomerDetailScreen.routeName: (context) => CustomerDetailScreen()
+            CustomerDetailScreen.routeName: (context) => CustomerDetailScreen(),
+            ProfileScreen.routeName: (context) => ProfileScreen()
           },
         ),
       ),

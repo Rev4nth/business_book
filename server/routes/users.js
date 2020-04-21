@@ -4,6 +4,7 @@ const router = express.Router();
 const db = require("../models");
 const generateToken = require("../generateToken");
 const googleAuth = require("../googleAuth");
+const auth = require("../authenticate");
 
 router.route("/token").post(async (req, res, next) => {
   try {
@@ -26,6 +27,21 @@ router.route("/token").post(async (req, res, next) => {
     res.send({ user, token });
   } catch (error) {
     console.log(error);
+    res.status(500).send({
+      error: error.toString(),
+    });
+  }
+});
+
+router.route("/profile").get(auth, async (req, res, next) => {
+  try {
+    const user = await db.User.findOne({
+      where: {
+        id: req.user.id,
+      },
+    });
+    res.json(user);
+  } catch (error) {
     res.status(500).send({
       error: error.toString(),
     });
