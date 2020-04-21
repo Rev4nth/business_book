@@ -26,7 +26,6 @@ class Sales with ChangeNotifier {
       final List<Sale> loadedSales =
           parsed.map<Sale>((json) => Sale.fromJson(json)).toList();
       _sales = loadedSales;
-      print(loadedSales[0].saleDate);
       notifyListeners();
     } catch (error) {
       throw (error);

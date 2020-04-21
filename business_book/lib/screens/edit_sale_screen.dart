@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import './sales_list_screen.dart';
 import '../services/api.dart';
 import '../models/customer.dart';
 import '../models/sale.dart';
@@ -80,9 +79,7 @@ class _EditSaleState extends State<EditSale> {
       },
       body: json.encode(_sale.toJson(), toEncodable: encodeDateToString),
     );
-    Navigator.of(context).popAndPushNamed(
-      SalesListScreen.routeName,
-    );
+    Navigator.of(context).pop();
   }
 
   @override
@@ -170,7 +167,7 @@ class _EditSaleState extends State<EditSale> {
                       ),
                     ),
                     textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.phone,
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Please enter an amount.';

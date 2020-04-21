@@ -7,6 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/sale_item.dart';
 import '../services/api.dart';
 import '../models/sale.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/sales.dart';
 
 class SalesListScreen extends StatefulWidget {
   static const routeName = '/';
@@ -15,54 +18,35 @@ class SalesListScreen extends StatefulWidget {
 }
 
 class _SalesListScreenState extends State<SalesListScreen> {
-  var _isLoading = true;
-  List salesList;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (salesList == null) {
-      fetchSales();
-    }
-  }
-
-  Future<void> fetchSales() async {
-    final String url = '${ApiService.baseUrl}/api/sales/';
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
-    final response = await http.get(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-    final parsed = json.decode(response.body);
-    final List<Sale> loadedSales =
-        parsed.map<Sale>((json) => Sale.fromJson(json)).toList();
-    setState(() {
-      salesList = loadedSales;
-      _isLoading = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : Container(
-            child: ListView.builder(
-                itemCount: salesList == null ? 0 : salesList.length,
-                itemBuilder: (context, index) {
-                  return SaleItem(
-                    id: salesList[index].id,
-                    description: salesList[index].description,
-                    amount: salesList[index].amount,
-                    saleDate: salesList[index].saleDate,
-                    customer: salesList[index].customer,
-                  );
-                }),
-          );
+    return FutureBuilder(
+        future: Provider.of<Sales>(context, listen: false).fetchAndSetSales(),
+        builder: (ctx, dataSnapshot) {
+          if (dataSnapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            if (dataSnapshot.error != null) {
+              return Center(
+                child: Text('An error occurred!'),
+              );
+            } else {
+              return Consumer<Sales>(
+                builder: (ctx, sales, child) => ListView.builder(
+                  itemCount: sales.items == null ? 0 : sales.items.length,
+                  itemBuilder: (context, index) {
+                    return SaleItem(
+                      id: sales.items[index].id,
+                      description: sales.items[index].description,
+                      amount: sales.items[index].amount,
+                      saleDate: sales.items[index].saleDate,
+                      customer: sales.items[index].customer,
+                    );
+                  },
+                ),
+              );
+            }
+          }
+        });
   }
 }

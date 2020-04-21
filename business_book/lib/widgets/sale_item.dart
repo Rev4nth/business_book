@@ -18,10 +18,12 @@ class SaleItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(
-          SaleDetailScreen.routeName,
-          arguments: id,
-        );
+        Navigator.of(context)
+            .pushNamed(
+              SaleDetailScreen.routeName,
+              arguments: id,
+            )
+            .then((onValue) => print(onValue));
       },
       child: Card(
         margin: EdgeInsets.only(top: 8, left: 8, right: 8),

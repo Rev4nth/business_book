@@ -47,15 +47,13 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
     final String url = '${ApiService.baseUrl}/api/sales/${saleId.toString()}';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
-    final response = await http.delete(
+    await http.delete(
       url,
       headers: {
         'Authorization': 'Bearer $token',
       },
     );
     Navigator.of(context).pop();
-    Navigator.of(context).pushNamed(TabsScreen.routeName);
-    print(response);
   }
 
   Widget buildSaleDetailsItem(
@@ -92,6 +90,33 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
     );
   }
 
+  void deleteDialog(BuildContext context, int saleId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text(
+          "Do you want to delete the sale?",
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text("No"),
+            onPressed: () => Navigator.pop(
+              context,
+              'Cancel',
+            ),
+          ),
+          FlatButton(
+            child: Text("Yes"),
+            onPressed: () {
+              deleteSale(saleId);
+              Navigator.pop(context, 'OK');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,44 +127,46 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(8),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        buildSaleDetailsItem(
-                          label: "Customer Name",
-                          value: saleDetails['Customer']['name'],
-                        ),
-                        buildSaleDetailsItem(
-                          label: "Amount",
-                          value: 'Rs. ${saleDetails['amount'].toString()}',
-                          valueColor: Colors.green,
-                        ),
-                        buildSaleDetailsItem(
-                          label: "Description",
-                          value: saleDetails['description'],
-                        ),
-                        buildSaleDetailsItem(
-                          label: "Sale happened on",
-                          value: DateFormat("d MMMM, y")
-                              .format(DateTime.parse(saleDetails['saleDate'])),
-                        ),
-                        Center(
-                          child: RaisedButton(
-                            color: Colors.red,
-                            textColor: Colors.white,
-                            child: Text("Delete Sale"),
-                            onPressed: () {
-                              deleteSale(saleDetails['id']);
-                            },
+            : Builder(
+                builder: (context) => Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(8),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          buildSaleDetailsItem(
+                            label: "Customer Name",
+                            value: saleDetails['Customer']['name'],
                           ),
-                        )
-                      ],
+                          buildSaleDetailsItem(
+                            label: "Amount",
+                            value: 'Rs. ${saleDetails['amount'].toString()}',
+                            valueColor: Colors.green,
+                          ),
+                          buildSaleDetailsItem(
+                            label: "Description",
+                            value: saleDetails['description'],
+                          ),
+                          buildSaleDetailsItem(
+                            label: "Sale happened on",
+                            value: DateFormat("d MMMM, y").format(
+                                DateTime.parse(saleDetails['saleDate'])),
+                          ),
+                          Center(
+                            child: RaisedButton(
+                              color: Colors.red,
+                              textColor: Colors.white,
+                              child: Text("Delete Sale"),
+                              onPressed: () {
+                                deleteDialog(context, saleDetails["id"]);
+                              },
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
