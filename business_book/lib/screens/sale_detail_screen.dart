@@ -37,6 +37,8 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
         'Authorization': 'Bearer $token',
       },
     );
+
+    print(json.decode(response.body));
     setState(() {
       saleDetails = json.decode(response.body);
       _isLoading = false;
@@ -155,6 +157,9 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
                             value: DateFormat("d MMMM, y").format(
                                 DateTime.parse(saleDetails['saleDate'])),
                           ),
+                          saleDetails['imageUrl'] != null
+                              ? Image.network(saleDetails['imageUrl'])
+                              : Text("No image"),
                           Center(
                             child: RaisedButton(
                               color: Colors.red,

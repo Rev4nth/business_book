@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../services/api.dart';
 import '../models/customer.dart';
@@ -22,6 +24,7 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
 
   List<Customer> _customersList = [];
   bool _loading = true;
+  File _image;
 
   void getCustomers() async {
     final url = '$_baseUrl/api/customers/';
@@ -80,6 +83,31 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
       body: json.encode(_sale.toJson(), toEncodable: encodeDateToString),
     );
     Navigator.of(context).pop();
+  }
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    _asyncFileUpload("bho", image);
+    setState(() {
+      _image = image;
+    });
+  }
+
+  _asyncFileUpload(String text, File file) async {
+    final url = '${ApiService.baseUrl}/api/images/upload';
+    var request = http.MultipartRequest("POST", Uri.parse(url));
+    //add text fields
+    request.fields["text_field"] = text;
+    var pic = await http.MultipartFile.fromPath("image", file.path);
+    request.files.add(pic);
+    var response = await request.send();
+    print(response);
+
+    var responseData = await response.stream.toBytes();
+    var responseString = String.fromCharCodes(responseData);
+    setState(() {
+      _sale.imageUrl = responseString;
+    });
   }
 
   @override
@@ -229,6 +257,15 @@ class _EditSaleScreenState extends State<EditSaleScreen> {
                         ]),
                   ),
                   SizedBox(height: 6),
+                  Center(
+                    child: _image == null
+                        ? Text('No image selected.')
+                        : Image.file(_image),
+                  ),
+                  RaisedButton(
+                    onPressed: getImage,
+                    child: new Text('Add Image'),
+                  ),
                   Divider(),
                   SizedBox(height: 6),
                   RaisedButton(

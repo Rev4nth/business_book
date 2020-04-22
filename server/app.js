@@ -9,6 +9,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const salesRouter = require("./routes/sales");
 const customersRouter = require("./routes/customers");
+const imagesRouter = require("./routes/images");
 
 const app = express();
 app.use(
@@ -27,5 +28,6 @@ app.use("/", indexRouter);
 app.use("/api/users/", usersRouter);
 app.use("/api/sales/", salesRouter);
 app.use("/api/customers/", customersRouter);
+app.use("/api/images/", imagesRouter);
 
 module.exports = app;

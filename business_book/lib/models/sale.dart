@@ -6,6 +6,7 @@ class Sale {
   int amount;
   DateTime saleDate;
   int customerId;
+  String imageUrl;
   Customer customer;
 
   Sale(
@@ -13,6 +14,7 @@ class Sale {
       this.description,
       this.amount,
       this.saleDate,
+      this.imageUrl,
       this.customer,
       this.customerId});
 
@@ -20,6 +22,7 @@ class Sale {
     id = json['id'];
     description = json['description'];
     amount = json['amount'];
+    imageUrl = json['imageUrl'];
     saleDate =
         json['saleDate'] != null ? DateTime.parse(json['saleDate']) : null;
     customerId = json['customerId'];
@@ -33,6 +36,7 @@ class Sale {
     data['id'] = this.id ?? '';
     data['description'] = this.description;
     data['amount'] = this.amount;
+    data['imageUrl'] = this.imageUrl;
     data['saleDate'] = this.saleDate;
     data['customerId'] = this.customerId;
     if (this.customer != null) {

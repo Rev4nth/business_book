@@ -9,7 +9,7 @@ router
   .get(auth, async (req, res, next) => {
     try {
       const sales = await db.Sale.findAll({
-        attributes: ["id", "description", "amount", "saleDate"],
+        attributes: ["id", "description", "amount", "saleDate", "imageUrl"],
         include: [{ model: db.Customer }],
         where: {
           userId: req.user.id,
@@ -23,6 +23,7 @@ router
     }
   })
   .post(auth, async (req, res, next) => {
+    console.log(req.body);
     try {
       const sale = await db.Sale.create({
         description: req.body.description,
@@ -30,6 +31,7 @@ router
         saleDate: req.body.saleDate,
         customerId: req.body.customerId,
         userId: req.user.id,
+        imageUrl: req.body.imageUrl,
       });
       res.json(sale);
     } catch (error) {
@@ -44,7 +46,7 @@ router
   .get(auth, async (req, res, next) => {
     try {
       const sales = await db.Sale.findAll({
-        attributes: ["id", "description", "amount", "saleDate"],
+        attributes: ["id", "description", "amount", "saleDate", "imageUrl"],
         include: [{ model: db.Customer }],
         where: {
           id: req.params.saleId,
