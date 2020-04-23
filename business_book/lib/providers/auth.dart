@@ -17,9 +17,14 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 
 class Auth with ChangeNotifier {
   String _token;
+  int userAccount;
 
   bool get isAuth {
     return _token != null;
+  }
+
+  bool get hasAccount {
+    return userAccount != null;
   }
 
   String get token {
@@ -42,6 +47,7 @@ class Auth with ChangeNotifier {
         body: json.encode({'idToken': googleAuth.idToken}),
       );
       final responseData = json.decode(response.body);
+      userAccount = responseData['user']['accountId'];
       _token = responseData['token'];
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
@@ -57,5 +63,27 @@ class Auth with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
     notifyListeners();
+  }
+
+  Future<void> saveAccount(String accountName) async {
+    final _baseUrl = ApiService.baseUrl;
+    final url = '$_baseUrl/api/users/account/';
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token');
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({"accountName": accountName}),
+      );
+      final responseData = json.decode(response.body);
+      userAccount = responseData['user']['accountId'];
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
   }
 }

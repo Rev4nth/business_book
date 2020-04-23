@@ -9,6 +9,7 @@ import '../services/api.dart';
 class User with ChangeNotifier {
   String displayName;
   String email;
+  String accountName;
 
   Future<void> fetchUser() async {
     final _baseUrl = ApiService.baseUrl;
@@ -22,6 +23,8 @@ class User with ChangeNotifier {
       final parsed = json.decode(response.body);
       displayName = parsed["displayName"];
       email = parsed["email"];
+      accountName = parsed["Account"]["name"];
+      print(parsed);
       notifyListeners();
     } catch (e) {
       throw (e);

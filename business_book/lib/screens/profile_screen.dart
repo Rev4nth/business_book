@@ -50,6 +50,16 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ),
                         ),
+                        Center(
+                          child: Text(
+                            user.accountName,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
                       ]),
                     ),
                   ),
