@@ -64,21 +64,65 @@ router
     }
   });
 
-router.route("/:customerId").get(auth, async (req, res, next) => {
-  try {
-    const customer = await db.Customer.findOne({
-      attributes: ["id", "name", "contact"],
-      where: {
-        id: req.params.customerId,
-      },
-    });
-    res.json(customer);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      error: error.toString(),
-    });
-  }
-});
+router
+  .route("/:customerId")
+  .get(auth, async (req, res, next) => {
+    try {
+      const customer = await db.Customer.findOne({
+        attributes: ["id", "name", "contact"],
+        where: {
+          id: req.params.customerId,
+        },
+      });
+      res.json(customer);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        error: error.toString(),
+      });
+    }
+  })
+  .put(auth, async (req, res, next) => {
+    try {
+      const customersContacts = await db.Customer.findAll({
+        where: {
+          userId: req.user.id,
+          contact: req.body.contact,
+          id: { $not: req.params.customerId },
+        },
+      });
+      if (customersContacts.length > 0) {
+        res.status(400).send({
+          error: "Customer with this contact number already exists",
+        });
+      }
+      const customersNames = await db.Customer.findAll({
+        where: {
+          userId: req.user.id,
+          id: { $not: req.params.customerId },
+          $col: db.sequelize.where(
+            db.sequelize.fn("lower", db.sequelize.col("name")),
+            db.sequelize.fn("lower", req.body.name)
+          ),
+        },
+      });
+      if (customersNames.length > 0) {
+        res.status(400).send({
+          error: "Customer with this name already exists",
+        });
+      }
+      const customer = await db.Customer.update({
+        name: req.body.name,
+        contact: req.body.contact,
+        userId: req.user.id,
+      });
+      res.json(customer);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        error: error.toString(),
+      });
+    }
+  });
 
 module.exports = router;
