@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     "Sale",
     {
       description: DataTypes.TEXT,
-      amount: DataTypes.INTEGER,
+      amount: DataTypes.FLOAT,
       saleDate: DataTypes.DATEONLY,
       imageUrl: DataTypes.STRING,
     },

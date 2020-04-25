@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       amount: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
       },
       saleDate: {
         type: Sequelize.DATEONLY,

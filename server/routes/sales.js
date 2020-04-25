@@ -27,7 +27,7 @@ router
     try {
       const sale = await db.Sale.create({
         description: req.body.description,
-        amount: parseInt(req.body.amount),
+        amount: parseFloat(req.body.amount),
         saleDate: req.body.saleDate,
         customerId: req.body.customerId,
         userId: req.user.id,
@@ -56,24 +56,6 @@ router
     } catch (error) {
       res.status(500).send({
         error: error.toString(),
-      });
-    }
-  })
-  .put(auth, async (req, res, next) => {
-    try {
-      const sale = await db.Sale.update(
-        { where: { id: req.params.saleId } },
-        {
-          description: req.body.description,
-          amount: parseInt(req.body.amount),
-          //   accountId: parseInt(req.params.accountId)
-          // saleDate: req.body.saleDate
-        }
-      );
-      res.json(sale);
-    } catch (error) {
-      res.status(500).send({
-        error,
       });
     }
   })

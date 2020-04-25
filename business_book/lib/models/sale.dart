@@ -3,7 +3,7 @@ import './customer.dart';
 class Sale {
   int id;
   String description;
-  int amount;
+  double amount;
   DateTime saleDate;
   int customerId;
   String imageUrl;

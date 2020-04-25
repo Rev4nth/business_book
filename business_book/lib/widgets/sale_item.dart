@@ -7,7 +7,7 @@ import '../models/customer.dart';
 class SaleItem extends StatelessWidget {
   final int id;
   final String description;
-  final int amount;
+  final double amount;
   final DateTime saleDate;
   final Customer customer;
 
