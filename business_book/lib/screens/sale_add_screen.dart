@@ -11,13 +11,13 @@ import '../services/api.dart';
 import '../models/customer.dart';
 import '../models/sale.dart';
 
-class EditSaleScreen extends StatefulWidget {
+class SaleAddScreen extends StatefulWidget {
   static const routeName = '/edit-sale';
   @override
-  _EditSaleScreenState createState() => _EditSaleScreenState();
+  _SaleAddScreenState createState() => _SaleAddScreenState();
 }
 
-class _EditSaleScreenState extends State<EditSaleScreen> {
+class _SaleAddScreenState extends State<SaleAddScreen> {
   final _form = GlobalKey<FormState>();
   final _baseUrl = ApiService.baseUrl;
   Sale _sale = Sale();

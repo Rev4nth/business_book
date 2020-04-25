@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/customer_item.dart';
 import '../providers/customers.dart';
 import '../services/api.dart';
-import '../models/customer.dart';
+// import '../models/customer.dart';
 
 class CustomersListScreen extends StatefulWidget {
   static const routeName = '/customers';

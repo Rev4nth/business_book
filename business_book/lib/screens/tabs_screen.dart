@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import './customers_list_screen.dart';
-import './edit_sale_screen.dart';
+import './sale_add_screen.dart';
 import './sales_list_screen.dart';
-import './edit_customer_screen.dart';
+import './customer_add_screen.dart';
 import '../widgets/app_drawer.dart';
 
 class TabsScreen extends StatefulWidget {
@@ -48,10 +48,10 @@ class _TabsScreenState extends State<TabsScreen> {
             icon: Icon(Icons.add),
             onPressed: () {
               if (_pages[_selectedPageIndex]['title'] == 'Sales') {
-                Navigator.of(context).pushNamed(EditSaleScreen.routeName);
+                Navigator.of(context).pushNamed(SaleAddScreen.routeName);
               }
               if (_pages[_selectedPageIndex]['title'] == 'Customers') {
-                Navigator.of(context).pushNamed(EditCustomerScreen.routeName);
+                Navigator.of(context).pushNamed(CustomerAddScreen.routeName);
               }
             },
           )

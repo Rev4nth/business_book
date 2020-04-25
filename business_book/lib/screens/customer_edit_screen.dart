@@ -4,31 +4,38 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../providers/customers.dart';
 import '../services/api.dart';
-import '../models/customer.dart';
-import './tabs_screen.dart';
 
-class EditCustomerScreen extends StatefulWidget {
-  static const routeName = '/edit-customer';
+class CustomerEditScreen extends StatefulWidget {
+  static String routeName = '/edit-customer';
+  final int id;
+  final String name;
+  final String contact;
+
+  CustomerEditScreen({this.id, this.name, this.contact});
+
   @override
-  _EditCustomerScreenState createState() => _EditCustomerScreenState();
+  _CustomerEditScreenState createState() => _CustomerEditScreenState();
 }
 
-class _EditCustomerScreenState extends State<EditCustomerScreen> {
-  final _form = GlobalKey<FormState>();
+class _CustomerEditScreenState extends State<CustomerEditScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _baseUrl = ApiService.baseUrl;
   Customer _customer = Customer();
 
-  void _saveCustomer(BuildContext context) async {
-    var isValid = _form.currentState.validate();
+  void _updateCustomer(BuildContext context) async {
+    var isValid = _formKey.currentState.validate();
     if (!isValid) {
       return;
     }
-    _form.currentState.save();
-    final url = '$_baseUrl/api/customers/';
+    _formKey.currentState.save();
+    _customer.id = widget.id;
+    print(_customer.toJson());
+    final url = '$_baseUrl/api/customers/${widget.id}';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
-    final response = await http.post(
+    final response = await http.put(
       url,
       headers: {
         "Content-Type": "application/json",
@@ -45,26 +52,25 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
       Scaffold.of(context).hideCurrentSnackBar();
       Scaffold.of(context).showSnackBar(snackBar);
     } else {
-      Navigator.of(context).pop();
-      Navigator.of(context).pushNamed(TabsScreen.routeName);
+      Navigator.of(context).pop(true);
+      // Navigator.of(context).pushNamed(TabsScreen.routeName);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text("Add Customer"),
+        title: Text('Edit Customer'),
       ),
-      body: Builder(
-        builder: (context) => Container(
+      body: Builder(builder: (context) {
+        return Container(
           padding: EdgeInsets.all(8),
           child: Card(
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16.0),
               child: Form(
-                key: _form,
+                key: _formKey,
                 child: ListView(
                   children: <Widget>[
                     TextFormField(
@@ -74,6 +80,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(4)),
                         ),
                       ),
+                      initialValue: widget.name,
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Please enter a name.';
@@ -81,6 +88,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                         return null;
                       },
                       onSaved: (value) {
+                        // print(value);
                         _customer.name = value.trim();
                       },
                     ),
@@ -93,6 +101,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                         ),
                       ),
                       textInputAction: TextInputAction.next,
+                      initialValue: widget.contact,
                       keyboardType: TextInputType.phone,
                       validator: (value) {
                         if (value.isEmpty) {
@@ -110,9 +119,9 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                     SizedBox(height: 16),
                     RaisedButton(
                       onPressed: () {
-                        _saveCustomer(context);
+                        _updateCustomer(context);
                       },
-                      child: new Text('Save'),
+                      child: new Text('Update'),
                       color: Theme.of(context).accentColor,
                       textColor: Colors.white,
                     )
@@ -121,8 +130,8 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
               ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

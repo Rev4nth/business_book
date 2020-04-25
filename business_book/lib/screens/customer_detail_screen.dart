@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 import '../services/api.dart';
+import './customer_edit_screen.dart';
 
 class CustomerDetailScreen extends StatefulWidget {
   static const routeName = '/customer-detail';
@@ -15,12 +16,18 @@ class CustomerDetailScreen extends StatefulWidget {
 class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   Map<String, dynamic> customerDetails;
   bool _isLoading = true;
+  bool refresh = false;
 
   @override
   void didChangeDependencies() {
     final customerId = ModalRoute.of(context).settings.arguments as int;
     if (customerDetails == null) {
       fetchCustomerDetails(customerId);
+    } else if (refresh) {
+      fetchCustomerDetails(customerId);
+      setState(() {
+        refresh = false;
+      });
     }
     super.didChangeDependencies();
   }
@@ -100,8 +107,31 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                           value: customerDetails['name'],
                         ),
                         buildCustomerDetailsItem(
-                            label: "Contact No.",
-                            value: customerDetails['contact']),
+                          label: "Contact No.",
+                          value: customerDetails['contact'],
+                        ),
+                        Center(
+                          child: RaisedButton(
+                            color: Colors.blue,
+                            textColor: Colors.white,
+                            child: Text("Edit Customer"),
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CustomerEditScreen(
+                                    id: customerDetails['id'],
+                                    name: customerDetails['name'],
+                                    contact: customerDetails['contact'],
+                                  ),
+                                ),
+                              );
+                              setState(() {
+                                refresh = result == null ? true : result;
+                              });
+                            },
+                          ),
+                        )
                       ],
                     ),
                   ),

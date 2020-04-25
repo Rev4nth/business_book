@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './screens/tabs_screen.dart';
-import './screens/edit_sale_screen.dart';
-import './screens/edit_customer_screen.dart';
+import './screens/sale_add_screen.dart';
+import './screens/customer_add_screen.dart';
 import './screens/login_screen.dart';
 import './screens/sale_detail_screen.dart';
 import './screens/customer_detail_screen.dart';
@@ -109,8 +109,8 @@ class MyApp extends StatelessWidget {
           routes: {
             '/tabs': (context) => TabsScreen(),
             '/auth': (context) => LoginScreen(),
-            EditSaleScreen.routeName: (context) => EditSaleScreen(),
-            EditCustomerScreen.routeName: (context) => EditCustomerScreen(),
+            SaleAddScreen.routeName: (context) => SaleAddScreen(),
+            CustomerAddScreen.routeName: (context) => CustomerAddScreen(),
             SaleDetailScreen.routeName: (context) => SaleDetailScreen(),
             CustomerDetailScreen.routeName: (context) => CustomerDetailScreen(),
             ProfileScreen.routeName: (context) => ProfileScreen()
