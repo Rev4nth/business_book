@@ -38,7 +38,6 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
       },
     );
 
-    print(json.decode(response.body));
     setState(() {
       saleDetails = json.decode(response.body);
       _isLoading = false;

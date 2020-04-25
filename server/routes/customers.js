@@ -30,7 +30,6 @@ router
           contact: req.body.contact,
         },
       });
-      console.log("contacts", customersContacts.length);
       const customersNames = await db.Customer.findAll({
         where: {
           userId: req.user.id,
@@ -40,7 +39,6 @@ router
           ),
         },
       });
-      console.log("names", customersNames.length);
       if (customersContacts.length > 0) {
         res.status(400).send({
           error: "Customer with this contact number already exists",
@@ -58,7 +56,6 @@ router
         res.json(customer);
       }
     } catch (error) {
-      console.log(error);
       res.status(500).send({
         error: error.toString(),
       });
@@ -77,7 +74,6 @@ router
       });
       res.json(customer);
     } catch (error) {
-      console.log(error);
       res.status(500).send({
         error: error.toString(),
       });
@@ -122,7 +118,6 @@ router
         res.json(customer);
       }
     } catch (error) {
-      console.log(error);
       res.status(500).send({
         error: error.toString(),
       });

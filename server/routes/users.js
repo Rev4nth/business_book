@@ -26,7 +26,6 @@ router.route("/token").post(async (req, res, next) => {
     const token = generateToken(user.email);
     res.send({ user, token });
   } catch (error) {
-    console.log(error);
     res.status(500).send({
       error: error.toString(),
     });
@@ -51,7 +50,6 @@ router.route("/profile").get(auth, async (req, res, next) => {
 
 router.route("/account").post(auth, async (req, res, next) => {
   try {
-    console.log(req.body.accountName);
     const account = await db.Account.create({
       name: req.body.accountName,
     });
@@ -63,7 +61,6 @@ router.route("/account").post(auth, async (req, res, next) => {
     const updatedUser = await user.setAccount(account);
     res.send({ user: updatedUser });
   } catch (error) {
-    console.log(error);
     res.status(500).send({
       error: error.toString(),
     });

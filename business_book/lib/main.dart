@@ -39,7 +39,6 @@ class _AccountScreenState extends State<AccountScreen> {
   String accountName;
   @override
   Widget build(BuildContext context) {
-    print(accountName);
     return Scaffold(
       appBar: AppBar(
         title: Text("Business"),

@@ -31,7 +31,6 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
     }
     _formKey.currentState.save();
     _customer.id = widget.id;
-    print(_customer.toJson());
     final url = '$_baseUrl/api/customers/${widget.id}';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
@@ -88,7 +87,6 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        // print(value);
                         _customer.name = value.trim();
                       },
                     ),

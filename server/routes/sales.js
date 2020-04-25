@@ -23,7 +23,6 @@ router
     }
   })
   .post(auth, async (req, res, next) => {
-    console.log(req.body);
     try {
       const sale = await db.Sale.create({
         description: req.body.description,

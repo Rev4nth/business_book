@@ -24,7 +24,6 @@ class User with ChangeNotifier {
       displayName = parsed["displayName"];
       email = parsed["email"];
       accountName = parsed["Account"]["name"];
-      print(parsed);
       notifyListeners();
     } catch (e) {
       throw (e);

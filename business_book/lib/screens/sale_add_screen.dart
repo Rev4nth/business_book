@@ -143,7 +143,6 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
     var pic = await http.MultipartFile.fromPath("image", file.path);
     request.files.add(pic);
     var response = await request.send();
-    print(response);
 
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
