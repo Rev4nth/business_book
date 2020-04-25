@@ -68,6 +68,12 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
   bool _loading = true;
   File _image;
 
+  @override
+  void initState() {
+    super.initState();
+    _sale.saleDate = new DateTime.now();
+  }
+
   void getCustomers() async {
     final url = '$_baseUrl/api/customers/';
     SharedPreferences prefs = await SharedPreferences.getInstance();
