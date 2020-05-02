@@ -7,9 +7,6 @@ const { v4: uuidv4 } = require("uuid");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// const db = require("../models");
-// const auth = require("../authenticate");
-
 const s3bucket = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,

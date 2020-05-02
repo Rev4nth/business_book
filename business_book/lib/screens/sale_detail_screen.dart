@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 import '../services/api.dart';
-import './tabs_screen.dart';
 
 class SaleDetailScreen extends StatefulWidget {
   static const routeName = '/sale-detail';
@@ -156,9 +155,38 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
                             value: DateFormat("d MMMM, y").format(
                                 DateTime.parse(saleDetails['saleDate'])),
                           ),
-                          saleDetails['imageUrl'] != null
-                              ? Image.network(saleDetails['imageUrl'])
-                              : Text("No image"),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 6),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Image",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 6,
+                                ),
+                                saleDetails['imageUrl'] != null
+                                    ? Image.network(saleDetails['imageUrl'])
+                                    : Text(
+                                        "No image selected",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                SizedBox(
+                                  height: 6,
+                                ),
+                                Divider(),
+                              ],
+                            ),
+                          ),
                           Center(
                             child: RaisedButton(
                               color: Colors.red,

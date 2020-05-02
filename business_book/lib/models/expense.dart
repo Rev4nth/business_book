@@ -1,30 +1,31 @@
 import './customer.dart';
 
-class Sale {
+class Expense {
   int id;
   String description;
   double amount;
-  DateTime saleDate;
+  DateTime expenseDate;
   int customerId;
   String imageUrl;
   Customer customer;
 
-  Sale(
+  Expense(
       {this.id,
       this.description,
       this.amount,
-      this.saleDate,
+      this.expenseDate,
       this.imageUrl,
       this.customer,
       this.customerId});
 
-  Sale.fromJson(Map<String, dynamic> json) {
+  Expense.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     description = json['description'];
-    amount = json['amount'].toDouble();
+    amount = double.parse(json['amount'].toString());
     imageUrl = json['imageUrl'];
-    saleDate =
-        json['saleDate'] != null ? DateTime.parse(json['saleDate']) : null;
+    expenseDate = json['expenseDate'] != null
+        ? DateTime.parse(json['expenseDate'])
+        : null;
     customerId = json['customerId'];
     customer = json['Customer'] != null
         ? new Customer.fromJson(json['Customer'])
@@ -37,7 +38,7 @@ class Sale {
     data['description'] = this.description;
     data['amount'] = this.amount;
     data['imageUrl'] = this.imageUrl;
-    data['saleDate'] = this.saleDate;
+    data['expenseDate'] = this.expenseDate;
     data['customerId'] = this.customerId;
     if (this.customer != null) {
       data['Customer'] = this.customer.toJson();

@@ -1,37 +1,39 @@
-import 'dart:convert';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../services/api.dart';
-import '../models/sale.dart';
 import "../widgets/customer_input.dart";
 import "../widgets/decimal_text_input_formatter.dart";
+import '../models/expense.dart';
+import "../services/api.dart";
 
-class SaleAddScreen extends StatefulWidget {
-  static const routeName = '/add-sale';
+class ExpenseAddScreen extends StatefulWidget {
+  static const routeName = "/add-expense";
   @override
-  _SaleAddScreenState createState() => _SaleAddScreenState();
+  _ExpenseAddScreenState createState() => _ExpenseAddScreenState();
 }
 
-class _SaleAddScreenState extends State<SaleAddScreen> {
-  final _form = GlobalKey<FormState>();
-  final _baseUrl = ApiService.baseUrl;
-  Sale _sale = Sale();
-
-  File _image;
+class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
+  final form = GlobalKey<FormState>();
+  Expense expense = Expense();
+  File image;
 
   @override
   void initState() {
     super.initState();
-    _sale.saleDate = new DateTime.now();
+    expense.expenseDate = new DateTime.now();
   }
 
-  void _presentDatePicker() {
+  void onCustomerChange(value) {
+    setState(() {
+      expense.customerId = value;
+    });
+  }
+
+  void presentDatePicker() {
     showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -42,8 +44,17 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
         return;
       }
       setState(() {
-        _sale.saleDate = pickedDate;
+        expense.expenseDate = pickedDate;
       });
+    });
+  }
+
+  Future getImage() async {
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var imageUrl = await asyncFileUpload(imageFile);
+    setState(() {
+      image = imageFile;
+      expense.imageUrl = imageUrl;
     });
   }
 
@@ -54,47 +65,26 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
     return item;
   }
 
-  void onCustomerChange(value) {
-    setState(() {
-      _sale.customerId = value;
-    });
-  }
-
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    var imageUrl = await asyncFileUpload(image);
-    setState(() {
-      _image = image;
-      _sale.imageUrl = imageUrl;
-    });
-  }
-
-  void _saveSale() async {
-    var isValid = _form.currentState.validate();
+  void saveExpense() async {
+    print(expense.toJson());
+    var isValid = form.currentState.validate();
     if (!isValid) {
       return;
     }
-    _form.currentState.save();
-    final url = '$_baseUrl/api/sales/';
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
-    http.post(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-      body: json.encode(_sale.toJson(), toEncodable: encodeDateToString),
-    );
-    Navigator.of(context).pop();
+    form.currentState.save();
+    var requestBody =
+        json.encode(expense.toJson(), toEncodable: encodeDateToString);
+    var response = await ApiService.postExpense(requestBody);
+    if (response.statusCode == 200) {
+      Navigator.pop(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text("Add Sale"),
+        title: Text("Add Expense"),
       ),
       body: Container(
         padding: EdgeInsets.all(8),
@@ -102,7 +92,7 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Form(
-              key: _form,
+              key: form,
               child: ListView(
                 children: <Widget>[
                   CustomerInput(
@@ -125,7 +115,9 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      _sale.description = value;
+                      setState(() {
+                        expense.description = value;
+                      });
                     },
                   ),
                   SizedBox(height: 6),
@@ -156,7 +148,9 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      _sale.amount = double.parse(value);
+                      setState(() {
+                        expense.amount = double.parse(value);
+                      });
                     },
                   ),
                   SizedBox(height: 6),
@@ -184,9 +178,9 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                             children: <Widget>[
                               Expanded(
                                 child: Text(
-                                  _sale.saleDate == null
+                                  expense.expenseDate == null
                                       ? 'No Date Chosen!'
-                                      : '${DateFormat("d MMMM, y").format(_sale.saleDate)}',
+                                      : '${DateFormat("d MMMM, y").format(expense.expenseDate)}',
                                 ),
                               ),
                               FlatButton(
@@ -197,12 +191,14 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                onPressed: _presentDatePicker,
+                                onPressed: presentDatePicker,
                               ),
                             ],
                           ),
                         ]),
                   ),
+                  SizedBox(height: 6),
+                  Divider(),
                   SizedBox(height: 6),
                   Container(
                     padding: EdgeInsets.all(6),
@@ -215,9 +211,9 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                     child: Column(
                       children: <Widget>[
                         Center(
-                          child: _image == null
+                          child: image == null
                               ? Text('No image selected.')
-                              : Image.file(_image),
+                              : Image.file(image),
                         ),
                         RaisedButton(
                           onPressed: getImage,
@@ -226,10 +222,11 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                       ],
                     ),
                   ),
-                  Divider(),
                   SizedBox(height: 6),
                   RaisedButton(
-                    onPressed: _saveSale,
+                    onPressed: () {
+                      saveExpense();
+                    },
                     child: new Text('Save'),
                     color: Theme.of(context).accentColor,
                     textColor: Colors.white,

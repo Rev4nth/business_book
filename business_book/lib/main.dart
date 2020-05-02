@@ -4,10 +4,13 @@ import 'package:provider/provider.dart';
 import './screens/tabs_screen.dart';
 import './screens/sale_add_screen.dart';
 import './screens/customer_add_screen.dart';
+import './screens/expense_add_screen.dart';
 import './screens/login_screen.dart';
 import './screens/sale_detail_screen.dart';
 import './screens/customer_detail_screen.dart';
 import './screens/profile_screen.dart';
+import './screens/expense_add_screen.dart';
+import './screens/expense_detail_screen.dart';
 
 import './providers/auth.dart';
 import './providers/sales.dart';
@@ -109,8 +112,10 @@ class MyApp extends StatelessWidget {
             '/tabs': (context) => TabsScreen(),
             '/auth': (context) => LoginScreen(),
             SaleAddScreen.routeName: (context) => SaleAddScreen(),
+            ExpenseAddScreen.routeName: (context) => ExpenseAddScreen(),
             CustomerAddScreen.routeName: (context) => CustomerAddScreen(),
             SaleDetailScreen.routeName: (context) => SaleDetailScreen(),
+            ExpenseDetailScreen.routeName: (context) => ExpenseDetailScreen(),
             CustomerDetailScreen.routeName: (context) => CustomerDetailScreen(),
             ProfileScreen.routeName: (context) => ProfileScreen()
           },

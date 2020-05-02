@@ -1,5 +1,79 @@
+import 'dart:io';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/expense.dart';
+
 class ApiService {
   // static const baseUrl =
   //     'http://business-book-staging.ap-south-1.elasticbeanstalk.com';
-  static const baseUrl = 'http://192.168.1.7:8080';
+  static const baseUrl = 'http://192.168.1.9:8080';
+
+  static Future<http.Response> postExpense(body) async {
+    final url = '$baseUrl/api/expenses/';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    var response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+      body: body,
+    );
+    return response;
+  }
+
+  static Future getExpenses() async {
+    final url = '$baseUrl/api/expenses/';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token',
+    });
+    final parsed = json.decode(response.body);
+    final List<Expense> expenses =
+        parsed.map<Expense>((json) => Expense.fromJson(json)).toList();
+    return expenses;
+  }
+
+  static Future getExpenseDetails(int expenseId) async {
+    final String url = '$baseUrl/api/expenses/${expenseId.toString()}';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    final expense = Expense.fromJson(json.decode(response.body));
+    return expense;
+  }
+
+  static Future deleteExpense(int expenseId) async {
+    final String url = '$baseUrl/api/expenses/${expenseId.toString()}';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    final response = await http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    return json.decode(response.body);
+  }
+}
+
+Future<String> asyncFileUpload(File file) async {
+  final url = '${ApiService.baseUrl}/api/images/upload';
+  var request = http.MultipartRequest("POST", Uri.parse(url));
+  var pic = await http.MultipartFile.fromPath("image", file.path);
+  request.files.add(pic);
+  var response = await request.send();
+  var responseData = await response.stream.toBytes();
+  var responseString = String.fromCharCodes(responseData);
+  return responseString;
 }
