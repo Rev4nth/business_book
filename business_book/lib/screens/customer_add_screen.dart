@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/api.dart';
 import '../models/customer.dart';
@@ -15,27 +13,17 @@ class CustomerAddScreen extends StatefulWidget {
 }
 
 class _CustomerAddScreenState extends State<CustomerAddScreen> {
-  final _form = GlobalKey<FormState>();
-  final _baseUrl = ApiService.baseUrl;
-  Customer _customer = Customer();
+  final formState = GlobalKey<FormState>();
+  Customer customer = Customer();
 
-  void _saveCustomer(BuildContext context) async {
-    var isValid = _form.currentState.validate();
+  void saveCustomer(BuildContext context) async {
+    var isValid = formState.currentState.validate();
     if (!isValid) {
       return;
     }
-    _form.currentState.save();
-    final url = '$_baseUrl/api/customers/';
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
-    final response = await http.post(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-      body: json.encode(_customer),
-    );
+    formState.currentState.save();
+    var requestBody = json.encode(customer.toJson());
+    var response = await ApiService.postCustomer(requestBody);
     if (response.statusCode == 400) {
       final parsedResponse = json.decode(response.body);
       final snackBar = SnackBar(
@@ -64,7 +52,7 @@ class _CustomerAddScreenState extends State<CustomerAddScreen> {
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Form(
-                key: _form,
+                key: formState,
                 child: ListView(
                   children: <Widget>[
                     TextFormField(
@@ -81,7 +69,9 @@ class _CustomerAddScreenState extends State<CustomerAddScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        _customer.name = value.trim();
+                        setState(() {
+                          customer.name = value.trim();
+                        });
                       },
                     ),
                     SizedBox(height: 16),
@@ -104,13 +94,15 @@ class _CustomerAddScreenState extends State<CustomerAddScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        _customer.contact = value;
+                        setState(() {
+                          customer.contact = value;
+                        });
                       },
                     ),
                     SizedBox(height: 16),
                     RaisedButton(
                       onPressed: () {
-                        _saveCustomer(context);
+                        saveCustomer(context);
                       },
                       child: new Text('Save'),
                       color: Theme.of(context).accentColor,

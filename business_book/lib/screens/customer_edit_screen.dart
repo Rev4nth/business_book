@@ -1,11 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../providers/customers.dart';
 import '../services/api.dart';
+import '../models/customer.dart';
 
 class CustomerEditScreen extends StatefulWidget {
   static String routeName = '/edit-customer';
@@ -20,28 +18,18 @@ class CustomerEditScreen extends StatefulWidget {
 }
 
 class _CustomerEditScreenState extends State<CustomerEditScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _baseUrl = ApiService.baseUrl;
-  Customer _customer = Customer();
+  final formState = GlobalKey<FormState>();
+  Customer customer = Customer();
 
-  void _updateCustomer(BuildContext context) async {
-    var isValid = _formKey.currentState.validate();
+  void updateCustomer(BuildContext context) async {
+    var isValid = formState.currentState.validate();
     if (!isValid) {
       return;
     }
-    _formKey.currentState.save();
-    _customer.id = widget.id;
-    final url = '$_baseUrl/api/customers/${widget.id}';
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
-    final response = await http.put(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-      body: json.encode(_customer),
-    );
+    formState.currentState.save();
+    customer.id = widget.id;
+    var requestBody = json.encode(customer);
+    var response = await ApiService.updateCustomer(customer.id, requestBody);
     if (response.statusCode == 400) {
       final parsedResponse = json.decode(response.body);
       final snackBar = SnackBar(
@@ -52,7 +40,6 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
       Scaffold.of(context).showSnackBar(snackBar);
     } else {
       Navigator.of(context).pop(true);
-      // Navigator.of(context).pushNamed(TabsScreen.routeName);
     }
   }
 
@@ -69,7 +56,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
-                key: _formKey,
+                key: formState,
                 child: ListView(
                   children: <Widget>[
                     TextFormField(
@@ -87,7 +74,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        _customer.name = value.trim();
+                        setState(() {
+                          customer.name = value.trim();
+                        });
                       },
                     ),
                     SizedBox(height: 16),
@@ -111,13 +100,15 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        _customer.contact = value;
+                        setState(() {
+                          customer.contact = value;
+                        });
                       },
                     ),
                     SizedBox(height: 16),
                     RaisedButton(
                       onPressed: () {
-                        _updateCustomer(context);
+                        updateCustomer(context);
                       },
                       child: new Text('Update'),
                       color: Theme.of(context).accentColor,

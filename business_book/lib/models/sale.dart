@@ -21,7 +21,7 @@ class Sale {
   Sale.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     description = json['description'];
-    amount = json['amount'].toDouble();
+    amount = double.parse(json['amount'].toString());
     imageUrl = json['imageUrl'];
     saleDate =
         json['saleDate'] != null ? DateTime.parse(json['saleDate']) : null;

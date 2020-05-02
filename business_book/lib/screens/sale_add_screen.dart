@@ -19,19 +19,24 @@ class SaleAddScreen extends StatefulWidget {
 }
 
 class _SaleAddScreenState extends State<SaleAddScreen> {
-  final _form = GlobalKey<FormState>();
-  final _baseUrl = ApiService.baseUrl;
-  Sale _sale = Sale();
+  final form = GlobalKey<FormState>();
+  Sale sale = Sale();
 
-  File _image;
+  File image;
 
   @override
   void initState() {
     super.initState();
-    _sale.saleDate = new DateTime.now();
+    sale.saleDate = new DateTime.now();
   }
 
-  void _presentDatePicker() {
+  void onCustomerChange(value) {
+    setState(() {
+      sale.customerId = value;
+    });
+  }
+
+  void presentDatePicker() {
     showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -42,8 +47,17 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
         return;
       }
       setState(() {
-        _sale.saleDate = pickedDate;
+        sale.saleDate = pickedDate;
       });
+    });
+  }
+
+  Future getImage() async {
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var imageUrl = await asyncFileUpload(imageFile);
+    setState(() {
+      image = imageFile;
+      sale.imageUrl = imageUrl;
     });
   }
 
@@ -54,39 +68,18 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
     return item;
   }
 
-  void onCustomerChange(value) {
-    setState(() {
-      _sale.customerId = value;
-    });
-  }
-
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    var imageUrl = await asyncFileUpload(image);
-    setState(() {
-      _image = image;
-      _sale.imageUrl = imageUrl;
-    });
-  }
-
-  void _saveSale() async {
-    var isValid = _form.currentState.validate();
+  void saveSale() async {
+    var isValid = form.currentState.validate();
     if (!isValid) {
       return;
     }
-    _form.currentState.save();
-    final url = '$_baseUrl/api/sales/';
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
-    http.post(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-      body: json.encode(_sale.toJson(), toEncodable: encodeDateToString),
-    );
-    Navigator.of(context).pop();
+    form.currentState.save();
+    var requestBody =
+        json.encode(sale.toJson(), toEncodable: encodeDateToString);
+    var response = await ApiService.postSale(requestBody);
+    if (response.statusCode == 200) {
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -102,7 +95,7 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Form(
-              key: _form,
+              key: form,
               child: ListView(
                 children: <Widget>[
                   CustomerInput(
@@ -125,7 +118,9 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      _sale.description = value;
+                      setState(() {
+                        sale.description = value;
+                      });
                     },
                   ),
                   SizedBox(height: 6),
@@ -156,7 +151,9 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      _sale.amount = double.parse(value);
+                      setState(() {
+                        sale.amount = double.parse(value);
+                      });
                     },
                   ),
                   SizedBox(height: 6),
@@ -184,9 +181,9 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                             children: <Widget>[
                               Expanded(
                                 child: Text(
-                                  _sale.saleDate == null
+                                  sale.saleDate == null
                                       ? 'No Date Chosen!'
-                                      : '${DateFormat("d MMMM, y").format(_sale.saleDate)}',
+                                      : '${DateFormat("d MMMM, y").format(sale.saleDate)}',
                                 ),
                               ),
                               FlatButton(
@@ -197,7 +194,7 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                onPressed: _presentDatePicker,
+                                onPressed: presentDatePicker,
                               ),
                             ],
                           ),
@@ -215,9 +212,9 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                     child: Column(
                       children: <Widget>[
                         Center(
-                          child: _image == null
+                          child: image == null
                               ? Text('No image selected.')
-                              : Image.file(_image),
+                              : Image.file(image),
                         ),
                         RaisedButton(
                           onPressed: getImage,
@@ -229,7 +226,7 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                   Divider(),
                   SizedBox(height: 6),
                   RaisedButton(
-                    onPressed: _saveSale,
+                    onPressed: saveSale,
                     child: new Text('Save'),
                     color: Theme.of(context).accentColor,
                     textColor: Colors.white,

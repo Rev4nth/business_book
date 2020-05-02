@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 import '../services/api.dart';
+import '../models/sale.dart';
 
 class SaleDetailScreen extends StatefulWidget {
   static const routeName = '/sale-detail';
@@ -14,46 +15,26 @@ class SaleDetailScreen extends StatefulWidget {
 }
 
 class _SaleDetailScreenState extends State<SaleDetailScreen> {
-  Map<String, dynamic> saleDetails;
-  bool _isLoading = true;
+  Sale sale;
+  bool isLoading = true;
 
   @override
-  void didChangeDependencies() {
-    final saleId = ModalRoute.of(context).settings.arguments as int;
-    if (saleDetails == null) {
-      fetchSaleDetails(saleId);
-    }
+  void didChangeDependencies() async {
     super.didChangeDependencies();
-  }
-
-  Future<void> fetchSaleDetails(int saleId) async {
-    final String url = '${ApiService.baseUrl}/api/sales/${saleId.toString()}';
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
-    final response = await http.get(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    setState(() {
-      saleDetails = json.decode(response.body);
-      _isLoading = false;
-    });
+    final saleId = ModalRoute.of(context).settings.arguments as int;
+    if (sale == null) {
+      sale = await ApiService.getSaleDetails(saleId);
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> deleteSale(int saleId) async {
-    final String url = '${ApiService.baseUrl}/api/sales/${saleId.toString()}';
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
-    await http.delete(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-    Navigator.of(context).pop();
+    final response = await ApiService.deleteSale(saleId);
+    if (response['isDeleted']) {
+      Navigator.pop(context, true);
+    }
   }
 
   Widget buildSaleDetailsItem(
@@ -123,7 +104,7 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
         appBar: AppBar(
           title: Text('Sale Details'),
         ),
-        body: _isLoading
+        body: isLoading
             ? Center(
                 child: CircularProgressIndicator(),
               )
@@ -139,21 +120,21 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
                         children: <Widget>[
                           buildSaleDetailsItem(
                             label: "Customer Name",
-                            value: saleDetails['Customer']['name'],
+                            value: sale.customer.name,
                           ),
                           buildSaleDetailsItem(
                             label: "Amount",
-                            value: 'Rs. ${saleDetails['amount'].toString()}',
+                            value: 'Rs. ${sale.amount.toString()}',
                             valueColor: Colors.green,
                           ),
                           buildSaleDetailsItem(
                             label: "Description",
-                            value: saleDetails['description'],
+                            value: sale.description,
                           ),
                           buildSaleDetailsItem(
                             label: "Sale happened on",
-                            value: DateFormat("d MMMM, y").format(
-                                DateTime.parse(saleDetails['saleDate'])),
+                            value:
+                                DateFormat("d MMMM, y").format(sale.saleDate),
                           ),
                           Container(
                             margin: EdgeInsets.only(bottom: 6),
@@ -171,8 +152,8 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
                                 SizedBox(
                                   height: 6,
                                 ),
-                                saleDetails['imageUrl'] != null
-                                    ? Image.network(saleDetails['imageUrl'])
+                                sale.imageUrl != null
+                                    ? Image.network(sale.imageUrl)
                                     : Text(
                                         "No image selected",
                                         style: TextStyle(
@@ -193,7 +174,7 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
                               textColor: Colors.white,
                               child: Text("Delete Sale"),
                               onPressed: () {
-                                deleteDialog(context, saleDetails["id"]);
+                                deleteDialog(context, sale.id);
                               },
                             ),
                           )

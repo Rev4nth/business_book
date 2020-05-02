@@ -13,8 +13,6 @@ import './screens/expense_add_screen.dart';
 import './screens/expense_detail_screen.dart';
 
 import './providers/auth.dart';
-import './providers/sales.dart';
-import './providers/customers.dart';
 import './providers/user.dart';
 
 void main() => runApp(MyApp());
@@ -100,8 +98,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<Auth>(create: (_) => Auth()),
         ChangeNotifierProvider<User>(create: (_) => User()),
-        ChangeNotifierProvider<Sales>(create: (_) => Sales()),
-        ChangeNotifierProvider<Customers>(create: (_) => Customers()),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) => MaterialApp(

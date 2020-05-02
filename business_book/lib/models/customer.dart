@@ -6,13 +6,14 @@ class Customer {
   String updatedAt;
   int userId;
 
-  Customer(
-      {this.id,
-      this.name,
-      this.contact,
-      this.createdAt,
-      this.updatedAt,
-      this.userId});
+  Customer({
+    this.id,
+    this.name,
+    this.contact,
+    this.createdAt,
+    this.updatedAt,
+    this.userId,
+  });
 
   Customer.fromJson(Map<String, dynamic> json) {
     id = json['id'];

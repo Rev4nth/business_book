@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../providers/sales.dart';
+import '../services/api.dart';
 import '../widgets/sale_item.dart';
 
 class SalesListScreen extends StatefulWidget {
@@ -14,32 +13,28 @@ class _SalesListScreenState extends State<SalesListScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Provider.of<Sales>(context, listen: false).fetchAndSetSales(),
-        builder: (ctx, dataSnapshot) {
-          if (dataSnapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else {
-            if (dataSnapshot.error != null) {
-              return Center(
-                child: Text('An error occurred!'),
+      future: ApiService.getSales(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data == null ? 0 : snapshot.data.length,
+            itemBuilder: (context, index) {
+              return SaleItem(
+                id: snapshot.data[index].id,
+                description: snapshot.data[index].description,
+                amount: snapshot.data[index].amount,
+                saleDate: snapshot.data[index].saleDate,
+                customer: snapshot.data[index].customer,
               );
-            } else {
-              return Consumer<Sales>(
-                builder: (ctx, sales, child) => ListView.builder(
-                  itemCount: sales.items == null ? 0 : sales.items.length,
-                  itemBuilder: (context, index) {
-                    return SaleItem(
-                      id: sales.items[index].id,
-                      description: sales.items[index].description,
-                      amount: sales.items[index].amount,
-                      saleDate: sales.items[index].saleDate,
-                      customer: sales.items[index].customer,
-                    );
-                  },
-                ),
-              );
-            }
-          }
-        });
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
   }
 }

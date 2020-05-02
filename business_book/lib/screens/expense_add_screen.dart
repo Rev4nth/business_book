@@ -17,7 +17,7 @@ class ExpenseAddScreen extends StatefulWidget {
 }
 
 class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
-  final form = GlobalKey<FormState>();
+  final formState = GlobalKey<FormState>();
   Expense expense = Expense();
   File image;
 
@@ -67,11 +67,11 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
 
   void saveExpense() async {
     print(expense.toJson());
-    var isValid = form.currentState.validate();
+    var isValid = formState.currentState.validate();
     if (!isValid) {
       return;
     }
-    form.currentState.save();
+    formState.currentState.save();
     var requestBody =
         json.encode(expense.toJson(), toEncodable: encodeDateToString);
     var response = await ApiService.postExpense(requestBody);
@@ -92,7 +92,7 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Form(
-              key: form,
+              key: formState,
               child: ListView(
                 children: <Widget>[
                   CustomerInput(
