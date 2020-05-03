@@ -9,9 +9,9 @@ import '../models/sale.dart';
 import '../models/customer.dart';
 
 class ApiService {
-  // static const baseUrl =
-  //     'http://business-book-staging.ap-south-1.elasticbeanstalk.com';
-  static const baseUrl = 'http://192.168.1.9:8080';
+  static const baseUrl =
+      'http://business-book-staging.ap-south-1.elasticbeanstalk.com';
+  // static const baseUrl = 'http://192.168.1.9:8080';
 
   static Future<http.Response> postSale(body) async {
     final url = '$baseUrl/api/sales/';
