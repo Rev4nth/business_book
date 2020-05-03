@@ -38,7 +38,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen> {
       );
       Scaffold.of(context).hideCurrentSnackBar();
       Scaffold.of(context).showSnackBar(snackBar);
-    } else {
+    } else if (response.statusCode == 200) {
       Navigator.of(context).pop(true);
     }
   }

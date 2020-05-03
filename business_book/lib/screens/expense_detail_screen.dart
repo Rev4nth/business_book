@@ -114,8 +114,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: ListView(
                       children: <Widget>[
                         buildExpenseDetailsItem(
                           label: "Customer Name",

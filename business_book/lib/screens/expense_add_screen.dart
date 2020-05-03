@@ -66,7 +66,6 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
   }
 
   void saveExpense() async {
-    print(expense.toJson());
     var isValid = formState.currentState.validate();
     if (!isValid) {
       return;
@@ -76,7 +75,7 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
         json.encode(expense.toJson(), toEncodable: encodeDateToString);
     var response = await ApiService.postExpense(requestBody);
     if (response.statusCode == 200) {
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     }
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/auth.dart';
+import '../providers/user.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -10,7 +10,7 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Google Sign In'),
       ),
-      body: Consumer<Auth>(builder: (context, auth, _) {
+      body: Consumer<User>(builder: (context, auth, _) {
         return auth.isAuth
             ? Center(
                 child: Column(
@@ -28,7 +28,7 @@ class LoginScreen extends StatelessWidget {
                     RaisedButton(
                       child: const Text('SIGN IN'),
                       onPressed: () async {
-                        await Provider.of<Auth>(context, listen: false)
+                        await Provider.of<User>(context, listen: false)
                             .signIn();
                       },
                     ),

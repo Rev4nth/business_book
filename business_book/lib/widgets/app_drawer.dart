@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/profile_screen.dart';
-import '../providers/auth.dart';
+import '../providers/user.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -37,7 +37,7 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/');
-              Provider.of<Auth>(context, listen: false).signOut();
+              Provider.of<User>(context, listen: false).signOut();
             },
           )
         ],

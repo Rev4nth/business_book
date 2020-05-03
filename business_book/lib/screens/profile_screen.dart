@@ -27,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
             } else {
               return Consumer<User>(
                 builder: (ctx, user, child) => Container(
-                  height: 120,
+                  height: 160,
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -50,12 +50,13 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ),
                         ),
+                        SizedBox(height: 6),
+                        Divider(),
                         Center(
                           child: Text(
-                            user.accountName,
+                            "Business Name: ${user.accountName}",
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.grey,
                               fontWeight: FontWeight.w400,
                             ),
                           ),

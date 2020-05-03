@@ -25,7 +25,10 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         isLoading = false;
       });
     } else if (refresh) {
-      customer = await ApiService.getCustomerDetails(customerId);
+      var updatedCustomer = await ApiService.getCustomerDetails(customerId);
+      setState(() {
+        customer = updatedCustomer;
+      });
     }
   }
 
@@ -107,7 +110,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                               ),
                             );
                             setState(() {
-                              refresh = result == null ? true : result;
+                              refresh = result == true ? true : false;
                             });
                           },
                         ),

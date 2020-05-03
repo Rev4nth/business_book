@@ -1,8 +1,4 @@
-import 'dart:convert';
-
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 import '../services/api.dart';
@@ -115,8 +111,7 @@ class _SaleDetailScreenState extends State<SaleDetailScreen> {
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: ListView(
                         children: <Widget>[
                           buildSaleDetailsItem(
                             label: "Customer Name",

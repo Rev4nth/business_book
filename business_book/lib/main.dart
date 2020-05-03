@@ -9,24 +9,23 @@ import './screens/login_screen.dart';
 import './screens/sale_detail_screen.dart';
 import './screens/customer_detail_screen.dart';
 import './screens/profile_screen.dart';
-import './screens/expense_add_screen.dart';
 import './screens/expense_detail_screen.dart';
 
-import './providers/auth.dart';
 import './providers/user.dart';
 
 void main() => runApp(MyApp());
 
-Widget bhome(auth) {
-  if (!auth.isAuth) {
+Widget loadHomePage(user) {
+  if (!user.isAuth) {
     return LoginScreen();
   }
-  if (auth.isAuth && auth.hasAccount) {
+  if (user.isAuth && user.hasAccount) {
     return TabsScreen();
   }
-  if (auth.isAuth && !auth.hasAccount) {
+  if (user.isAuth && !user.hasAccount) {
     return AccountScreen();
   }
+  return null;
 }
 
 class AccountScreen extends StatefulWidget {
@@ -77,7 +76,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       return;
                     }
                     _formKey.currentState.save();
-                    Provider.of<Auth>(context, listen: false)
+                    Provider.of<User>(context, listen: false)
                         .saveAccount(this.accountName);
                   },
                   child: new Text('Save'),
@@ -96,14 +95,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<Auth>(create: (_) => Auth()),
         ChangeNotifierProvider<User>(create: (_) => User()),
       ],
-      child: Consumer<Auth>(
-        builder: (context, auth, _) => MaterialApp(
+      child: Consumer<User>(
+        builder: (context, user, _) => MaterialApp(
           title: "Business Book",
-          // home: auth.isAuth ? TabsScreen() : LoginScreen(),
-          home: bhome(auth),
+          home: loadHomePage(user),
           routes: {
             '/tabs': (context) => TabsScreen(),
             '/auth': (context) => LoginScreen(),

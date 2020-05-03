@@ -56,7 +56,7 @@ class ApiService {
   }
 
   static Future deleteSale(int saleId) async {
-    final String url = '$baseUrl/api/expenses/${saleId.toString()}';
+    final String url = '$baseUrl/api/sales/${saleId.toString()}';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
     final response = await http.delete(

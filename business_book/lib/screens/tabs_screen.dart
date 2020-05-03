@@ -52,15 +52,28 @@ class _TabsScreenState extends State<TabsScreen> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {
+            onPressed: () async {
+              var reload;
               if (_pages[_selectedPageIndex]['title'] == 'Sales') {
-                Navigator.of(context).pushNamed(SaleAddScreen.routeName);
+                reload = await Navigator.of(context)
+                    .pushNamed(SaleAddScreen.routeName);
+                if (reload) {
+                  _selectPage(1);
+                }
               }
               if (_pages[_selectedPageIndex]['title'] == 'Expenses') {
-                Navigator.of(context).pushNamed(ExpenseAddScreen.routeName);
+                reload = await Navigator.of(context)
+                    .pushNamed(ExpenseAddScreen.routeName);
+                if (reload) {
+                  _selectPage(2);
+                }
               }
               if (_pages[_selectedPageIndex]['title'] == 'Customers') {
-                Navigator.of(context).pushNamed(CustomerAddScreen.routeName);
+                reload = await Navigator.of(context)
+                    .pushNamed(CustomerAddScreen.routeName);
+                if (reload) {
+                  _selectPage(3);
+                }
               }
             },
           )
