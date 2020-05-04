@@ -35,10 +35,11 @@ router.route("/token").post(async (req, res, next) => {
 router.route("/profile").get(auth, async (req, res, next) => {
   try {
     const user = await db.User.findOne({
+      attributes: ["id", "displayName", "email"],
       where: {
         id: req.user.id,
       },
-      include: [{ model: db.Account }],
+      include: [{ model: db.Account, attributes: ["id", "name"] }],
     });
     res.json(user);
   } catch (error) {

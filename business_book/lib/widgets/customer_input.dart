@@ -9,7 +9,8 @@ import '../models/customer.dart';
 
 class CustomerInput extends StatefulWidget {
   final Function onChange;
-  CustomerInput({this.onChange});
+  final int initialValue;
+  CustomerInput({this.onChange, this.initialValue});
 
   @override
   _CustomerInputState createState() => _CustomerInputState();
@@ -68,7 +69,7 @@ class _CustomerInputState extends State<CustomerInput> {
             ),
           ),
           DropdownButton<int>(
-            value: customerId,
+            value: widget.initialValue,
             hint: Text('Select a customer'),
             items: customersList.map((Customer customer) {
               return DropdownMenuItem(

@@ -50,6 +50,7 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
   }
 
   Future getImage() async {
+    FocusScope.of(context).unfocus(focusPrevious: true);
     var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
     var imageUrl = await asyncFileUpload(imageFile);
     setState(() {
@@ -96,11 +97,13 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
                 children: <Widget>[
                   CustomerInput(
                     onChange: onCustomerChange,
+                    initialValue: expense.customerId,
                   ),
                   Divider(),
                   TextFormField(
                     keyboardType: TextInputType.multiline,
                     maxLines: 3,
+                    initialValue: expense.description,
                     decoration: InputDecoration(
                       labelText: 'Description',
                       border: OutlineInputBorder(
@@ -113,7 +116,7 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
                       }
                       return null;
                     },
-                    onSaved: (value) {
+                    onChanged: (value) {
                       setState(() {
                         expense.description = value;
                       });
@@ -123,13 +126,14 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
                   Divider(),
                   SizedBox(height: 6),
                   TextFormField(
+                    initialValue:
+                        expense.amount == null ? "" : expense.amount.toString(),
                     decoration: InputDecoration(
                       labelText: 'Amount',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(4)),
                       ),
                     ),
-                    textInputAction: TextInputAction.next,
                     inputFormatters: [
                       DecimalTextInputFormatter(decimalRange: 2)
                     ],
@@ -146,7 +150,7 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
                       }
                       return null;
                     },
-                    onSaved: (value) {
+                    onChanged: (value) {
                       setState(() {
                         expense.amount = double.parse(value);
                       });

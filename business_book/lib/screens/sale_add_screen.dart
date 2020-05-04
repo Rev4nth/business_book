@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../services/api.dart';
@@ -21,7 +19,6 @@ class SaleAddScreen extends StatefulWidget {
 class _SaleAddScreenState extends State<SaleAddScreen> {
   final form = GlobalKey<FormState>();
   Sale sale = Sale();
-
   File image;
 
   @override
@@ -53,10 +50,13 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
   }
 
   Future getImage() async {
+    FocusScope.of(context).unfocus(focusPrevious: true);
     var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
-    var imageUrl = await asyncFileUpload(imageFile);
     setState(() {
       image = imageFile;
+    });
+    var imageUrl = await asyncFileUpload(imageFile);
+    setState(() {
       sale.imageUrl = imageUrl;
     });
   }
@@ -100,11 +100,13 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                 children: <Widget>[
                   CustomerInput(
                     onChange: onCustomerChange,
+                    initialValue: sale.customerId,
                   ),
                   Divider(),
                   TextFormField(
                     keyboardType: TextInputType.multiline,
                     maxLines: 3,
+                    initialValue: sale.description,
                     decoration: InputDecoration(
                       labelText: 'Description',
                       border: OutlineInputBorder(
@@ -117,7 +119,7 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                       }
                       return null;
                     },
-                    onSaved: (value) {
+                    onChanged: (value) {
                       setState(() {
                         sale.description = value;
                       });
@@ -127,13 +129,14 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                   Divider(),
                   SizedBox(height: 6),
                   TextFormField(
+                    initialValue:
+                        sale.amount == null ? "" : sale.amount.toString(),
                     decoration: InputDecoration(
                       labelText: 'Amount',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(4)),
                       ),
                     ),
-                    textInputAction: TextInputAction.next,
                     inputFormatters: [
                       DecimalTextInputFormatter(decimalRange: 2)
                     ],
@@ -150,7 +153,7 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
                       }
                       return null;
                     },
-                    onSaved: (value) {
+                    onChanged: (value) {
                       setState(() {
                         sale.amount = double.parse(value);
                       });

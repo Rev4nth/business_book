@@ -7,11 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/expense.dart';
 import '../models/sale.dart';
 import '../models/customer.dart';
+import "../models/user.dart";
 
 class ApiService {
   static const baseUrl =
       'http://business-book-staging.ap-south-1.elasticbeanstalk.com';
-  // static const baseUrl = 'http://192.168.1.9:8080';
+  // static const baseUrl = 'http://192.168.1.6:8080';
 
   static Future<http.Response> postSale(body) async {
     final url = '$baseUrl/api/sales/';
@@ -178,6 +179,18 @@ class ApiService {
       body: body,
     );
     return response;
+  }
+
+  static Future getProfile() async {
+    final url = '$baseUrl/api/users/profile/';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token',
+    });
+    final parsed = json.decode(response.body);
+    final user = User.fromJson(parsed);
+    return user;
   }
 }
 
