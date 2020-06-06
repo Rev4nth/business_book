@@ -1,4 +1,4 @@
-package com.jumpint.business_book
+package com.business_book
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
