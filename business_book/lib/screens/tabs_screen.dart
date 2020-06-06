@@ -57,22 +57,25 @@ class _TabsScreenState extends State<TabsScreen> {
               if (_pages[_selectedPageIndex]['title'] == 'Sales') {
                 reload = await Navigator.of(context)
                     .pushNamed(SaleAddScreen.routeName);
+                print(reload);
                 if (reload) {
-                  _selectPage(1);
+                  _selectPage(0);
                 }
               }
               if (_pages[_selectedPageIndex]['title'] == 'Expenses') {
                 reload = await Navigator.of(context)
                     .pushNamed(ExpenseAddScreen.routeName);
+                print(reload);
                 if (reload) {
-                  _selectPage(2);
+                  _selectPage(1);
                 }
               }
               if (_pages[_selectedPageIndex]['title'] == 'Customers') {
                 reload = await Navigator.of(context)
                     .pushNamed(CustomerAddScreen.routeName);
+                print(reload);
                 if (reload) {
-                  _selectPage(3);
+                  _selectPage(2);
                 }
               }
             },
@@ -88,12 +91,12 @@ class _TabsScreenState extends State<TabsScreen> {
         items: [
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
-            icon: Icon(Icons.work),
+            icon: Icon(Icons.arrow_downward),
             title: Text('Sales'),
           ),
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
-            icon: Icon(Icons.people),
+            icon: Icon(Icons.arrow_upward),
             title: Text('Expenses'),
           ),
           BottomNavigationBarItem(

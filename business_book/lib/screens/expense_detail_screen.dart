@@ -123,7 +123,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
                         buildExpenseDetailsItem(
                           label: "Amount",
                           value: 'Rs. ${expense.amount.toString()}',
-                          valueColor: Colors.green,
+                          valueColor: Colors.red,
                         ),
                         buildExpenseDetailsItem(
                           label: "Description",

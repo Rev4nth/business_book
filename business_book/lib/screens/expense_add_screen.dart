@@ -50,7 +50,7 @@ class _ExpenseAddScreenState extends State<ExpenseAddScreen> {
   }
 
   Future getImage() async {
-    FocusScope.of(context).unfocus(focusPrevious: true);
+    FocusScope.of(context).unfocus();
     var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
     var imageUrl = await asyncFileUpload(imageFile);
     setState(() {

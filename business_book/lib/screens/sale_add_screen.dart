@@ -50,7 +50,7 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
   }
 
   Future getImage() async {
-    FocusScope.of(context).unfocus(focusPrevious: true);
+    FocusScope.of(context).unfocus();
     var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       image = imageFile;
@@ -78,7 +78,7 @@ class _SaleAddScreenState extends State<SaleAddScreen> {
         json.encode(sale.toJson(), toEncodable: encodeDateToString);
     var response = await ApiService.postSale(requestBody);
     if (response.statusCode == 200) {
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     }
   }
 

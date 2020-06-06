@@ -67,7 +67,7 @@ class ExpenseItem extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
-                      color: Colors.green,
+                      color: Colors.red,
                     ),
                   ),
                   SizedBox(height: 6),

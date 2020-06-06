@@ -33,8 +33,7 @@ class _CustomerAddScreenState extends State<CustomerAddScreen> {
       Scaffold.of(context).hideCurrentSnackBar();
       Scaffold.of(context).showSnackBar(snackBar);
     } else {
-      Navigator.of(context).pop();
-      Navigator.of(context).pushNamed(TabsScreen.routeName);
+      Navigator.of(context).pop(true);
     }
   }
 
