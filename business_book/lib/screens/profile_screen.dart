@@ -24,7 +24,6 @@ class ProfileScreen extends StatelessWidget {
                 child: Text('An error occurred!'),
               );
             } else {
-              print(snapshot);
               return Container(
                 height: 160,
                 child: Card(

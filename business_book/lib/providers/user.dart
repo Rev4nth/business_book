@@ -49,7 +49,6 @@ class User with ChangeNotifier {
         headers: {"Content-Type": "application/json"},
         body: json.encode({'idToken': googleAuth.idToken}),
       );
-      print(response);
       final responseData = json.decode(response.body);
       userAccount = responseData['user']['accountId'];
       _token = responseData['token'];
